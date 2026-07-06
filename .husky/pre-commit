@@ -1,0 +1,8 @@
+# 1. Fast deterministic gates first (cheap, catch the obvious).
+npx lint-staged || exit 1
+
+# 2. Type safety — block commits with type errors.
+npm run typecheck || exit 1
+
+# 3. AI review of staged changes (fail-open if reviewer unavailable).
+node scripts/ai-review.mjs || exit 1
