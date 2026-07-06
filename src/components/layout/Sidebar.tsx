@@ -83,13 +83,15 @@ const NavItem = styled(NavLink)(({ theme }) => ({
 export interface SidebarProps {
   /** Icon-only 60px rail when true; labelled 200px nav when false. */
   collapsed?: boolean;
+  /** Called after a nav item is activated — used to close the mobile drawer. */
+  onNavigate?: () => void;
 }
 
 /**
  * Sidebar — primary navigation rail (Figma "Side Nav Admin Provider").
  * Expands to a labelled 200px nav or collapses to a 60px icon-only rail.
  */
-export function Sidebar({ collapsed = false }: SidebarProps) {
+export function Sidebar({ collapsed = false, onNavigate }: SidebarProps) {
   return (
     <Root
       aria-label="Primary"
@@ -119,6 +121,7 @@ export function Sidebar({ collapsed = false }: SidebarProps) {
           <NavItem
             key={to}
             to={to}
+            onClick={onNavigate}
             title={collapsed ? label : undefined}
             aria-label={label}
             sx={

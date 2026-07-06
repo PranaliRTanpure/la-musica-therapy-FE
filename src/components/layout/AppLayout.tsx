@@ -1,18 +1,36 @@
 import { Outlet } from 'react-router-dom';
 import Box from '@mui/material/Box';
+import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import ViewSidebarRounded from '@mui/icons-material/ViewSidebarRounded';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+// import ViewSidebarRounded from '@mui/icons-material/ViewSidebarRounded';
+import ViewHeadlineOutlinedIcon from '@mui/icons-material/ViewHeadlineOutlined';
 import { Sidebar } from './Sidebar';
 import { useUIStore } from '@/stores/ui-store';
 
 /**
- * App shell: collapsible primary Sidebar + a slim header whose toggle drives the
- * collapse, with the routed page rendered in a scrollable content area.
+ * App shell. Desktop (>= md): a persistent collapsible Sidebar rail. Mobile
+ * (< md): the Sidebar lives in a temporary Drawer opened from the header
+ * toggle and dismissed on backdrop tap or nav selection. A slim header holds
+ * the toggle; the routed page renders in a scrollable content area.
  */
 export function AppLayout() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
   const sidebarOpen = useUIStore((s) => s.sidebarOpen);
   const toggleSidebar = useUIStore((s) => s.toggleSidebar);
+  const mobileNavOpen = useUIStore((s) => s.mobileNavOpen);
+  const openMobileNav = useUIStore((s) => s.openMobileNav);
+  const closeMobileNav = useUIStore((s) => s.closeMobileNav);
+
+  const toggleTitle = isMobile
+    ? 'Open menu'
+    : sidebarOpen
+      ? 'Collapse sidebar'
+      : 'Expand sidebar';
 
   return (
     <Box
@@ -23,7 +41,21 @@ export function AppLayout() {
         '@supports (height: 100dvh)': { height: '100dvh' },
       }}
     >
-      <Sidebar collapsed={!sidebarOpen} />
+      {/* Desktop: persistent collapsible rail */}
+      {!isMobile && <Sidebar collapsed={!sidebarOpen} />}
+
+      {/* Mobile: temporary drawer (backdrop, ESC, focus-trap handled by MUI) */}
+      {isMobile && (
+        <Drawer
+          variant="temporary"
+          open={mobileNavOpen}
+          onClose={closeMobileNav}
+          ModalProps={{ keepMounted: true }}
+          slotProps={{ paper: { sx: { border: 'none' } } }}
+        >
+          <Sidebar onNavigate={closeMobileNav} />
+        </Drawer>
+      )}
 
       <Box
         component="main"
@@ -49,13 +81,14 @@ export function AppLayout() {
             borderColor: 'divider',
           }}
         >
-          <Tooltip title={sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}>
+          <Tooltip title={toggleTitle}>
             <IconButton
-              onClick={toggleSidebar}
-              aria-label="Toggle sidebar"
-              aria-pressed={!sidebarOpen}
+              onClick={isMobile ? openMobileNav : toggleSidebar}
+              aria-label={isMobile ? 'Open navigation menu' : 'Toggle sidebar'}
+              aria-expanded={isMobile ? mobileNavOpen : undefined}
+              aria-pressed={isMobile ? undefined : !sidebarOpen}
             >
-              <ViewSidebarRounded />
+              <ViewHeadlineOutlinedIcon />
             </IconButton>
           </Tooltip>
         </Box>
