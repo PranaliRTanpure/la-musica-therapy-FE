@@ -198,3 +198,134 @@ The designers provide a reference implementation (their repo + live Vercel site)
 - Layout uses MUI layout components, not manual CSS divs.
 - Responsive at xs/sm/md verified.
 - Recurring design values live in `src/theme/theme.ts`, not inline.
+
+## Forms
+
+Forms use **React Hook Form** (RHF) + **Zod** for validation, integrated with MUI via a two-tier component pattern. Never build forms with raw `useState` per field.
+
+### Two-tier component rule (IMPORTANT)
+
+Every form-capable input has TWO layers — never merge them:
+
+1. **Base component** (`src/components/common/`, e.g. `AppTextField`, `AppSelect`): a pure MUI wrapper. Knows NOTHING about forms. Props: `value`, `onChange`, `error`, `helperText`, `label`, etc. Must be usable standalone, outside any form.
+2. **Form adapter** (`src/components/form/`, e.g. `FormTextField`, `FormSelect`): wraps the base component in RHF's `<Controller>`. Props: `name`, `control`, plus whatever the base needs. Used ONLY inside forms.
+
+NEVER put `<Controller>` or any RHF hook inside a base component — that makes it unusable outside forms. The Controller lives only in the adapter tier.
+
+- Using an input **inside a form** → use the `Form*` adapter.
+- Using the same input **standalone** (e.g. a filter dropdown, a search box not tied to a form) → use the base `App*` component directly with local state.
+
+### Form setup pattern
+
+- Define a **Zod schema** per form; infer the TS type from it (`z.infer`). One source of truth for shape + validation.
+- Initialize with `useForm({ resolver: zodResolver(schema), defaultValues })`.
+- Pass `control` to the `Form*` adapters.
+- Submit via `handleSubmit(onSubmit)`. On API-backed forms, the submit handler calls the TanStack Query mutation; show submitting state via `formState.isSubmitting`.
+- Keep schemas near the form (`schema.ts` in the feature folder). When the API contract exists, align the schema's shape with the orval-generated request type.
+
+### Validation
+
+- All validation rules live in the Zod schema, not scattered in JSX or manual checks.
+- Show errors via the adapter passing `fieldState.error` down to the base component's `error`/`helperText`.
+
+### What NOT to do
+
+- No `useState` for individual form fields.
+- No `<Controller>` inside base/presentational components.
+- No duplicated input styling — style once in the base component (or theme), reuse everywhere.
+- No inline validation logic — it belongs in the schema.
+
+### Definition of done (forms)
+
+- Form uses RHF + Zod resolver; no per-field useState.
+- Inputs use `Form*` adapters inside the form; base `App*` components remain form-agnostic.
+- Validation is schema-driven; errors surface through the adapter.
+
+## Writing Common Components
+
+Common components live in `src/components/common/` and are the shared, reusable building blocks used across screens and features. Getting these right is what keeps the codebase consistent instead of 40 screens each reinventing a button or card.
+
+### What belongs in `common/` vs elsewhere
+
+- **`src/components/common/`** — generic, reusable, presentational components with no business logic and no feature-specific knowledge (e.g. `AppTextField`, `AppSelect`, `AppButton`, `PageHeader`, `EmptyState`, `ConfirmDialog`).
+- **`src/components/layout/`** — app shell pieces (sidebar, header, `AppLayout`).
+- **`src/features/<name>/components/`** — components tied to one feature and its data. Do NOT put these in `common/`.
+- Rule of thumb: if it references a specific API, business rule, or one screen's needs, it is NOT a common component.
+
+### Core principles
+
+- **Presentational and pure.** Common components receive data and callbacks via props. They do NOT fetch data, call APIs, access stores, or contain business logic. Data comes from the parent.
+- **Controlled by props, not internal state.** State that the parent might care about (value, open/closed) is driven by props (`value` + `onChange`, `open` + `onClose`). Only purely-internal UI state (e.g. a hover tooltip) may live inside.
+- **Form-agnostic.** Never put React Hook Form's `Controller` or hooks inside a common component (see Forms section — that's the adapter tier's job). Common inputs must work standalone.
+- **Themed, never hardcoded.** All colors/spacing/radii/type come from the MUI theme (see MUI section). No hex values, no px literals for design tokens.
+- **Composable.** Prefer accepting `children` and spreading through extra props over rigid, closed APIs. Forward `sx` so callers can adjust spacing in context.
+
+### API design for a component
+
+- **Typed props interface**, named `<Component>Props`, defined above the component. No `any`.
+- **Sensible defaults** for optional props so the common case is a short call.
+- **Extend the underlying MUI component's props** when wrapping one, so callers keep access to standard props:
+
+```tsx
+interface AppButtonProps extends ButtonProps {
+  loading?: boolean;
+}
+```
+
+Then spread `...rest` onto the MUI component. This avoids re-declaring every prop and keeps the wrapper flexible.
+
+- **Forward `sx`** (and ideally `ref` where relevant) so the component composes into any layout.
+- **Name by role, not by style**: `PageHeader`, `EmptyState`, `StatusChip` — not `BlueBox`.
+
+### Structure
+
+- One component per file, named export, PascalCase filename matching the component.
+- Co-locate a barrel `index.ts` in `common/` only if it aids imports; don't over-engineer.
+- Keep them small. If a "common" component grows business logic or branches for specific screens, it's not common — move it to the relevant feature.
+
+### When to create a common component
+
+- Create one when a UI pattern appears (or clearly will appear) in **2+ places** with the same look/behavior.
+- Do NOT prematurely abstract: a one-off piece of UI used on a single screen stays on that screen until a second use appears. Duplication once is fine; duplication three times means extract.
+- Prefer configuring the **MUI theme** (`components.styleOverrides`/`defaultProps`) over a wrapper component when the only difference is default styling. Only create a wrapper when you need added behavior (e.g. a `loading` state on a button) or a composed structure.
+
+### Example shape (a themed, prop-driven, MUI-extending wrapper)
+
+```tsx
+import { Button, CircularProgress, type ButtonProps } from '@mui/material';
+
+interface AppButtonProps extends ButtonProps {
+  loading?: boolean;
+}
+
+export function AppButton({
+  loading,
+  disabled,
+  children,
+  ...rest
+}: AppButtonProps) {
+  return (
+    <Button disabled={disabled || loading} {...rest}>
+      {loading ? <CircularProgress size={18} sx={{ mr: 1 }} /> : null}
+      {children}
+    </Button>
+  );
+}
+```
+
+This extends MUI's `ButtonProps` (callers keep `variant`, `color`, `onClick`, `sx`, etc.), adds one behavior (`loading`), stays presentational, and hardcodes nothing.
+
+### What NOT to do
+
+- No data fetching, store access, or API calls inside common components.
+- No business logic or feature-specific conditionals.
+- No hardcoded colors/spacing; no `any` in props.
+- No premature abstraction — don't build a "flexible" mega-component for a single use.
+- No re-declaring every MUI prop instead of extending the base props interface.
+
+### Definition of done (common components)
+
+- Presentational, prop-driven, no data/store/API access.
+- Typed `<Component>Props`, extends base component props where wrapping MUI, no `any`.
+- Themed (no hardcoded design values), forwards `sx`.
+- Justified by real reuse (2+ places) or added behavior — not premature.

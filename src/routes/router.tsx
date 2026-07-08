@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { PlaceholderPage } from '@/pages/PlaceholderPage';
+import { ClientsPage } from '@/features/clients/ClientsPage';
 import { ROUTES } from '@/config/routes';
 
 export const router = createBrowserRouter([
@@ -13,7 +14,7 @@ export const router = createBrowserRouter([
         path: ROUTES.DASHBOARD,
         element: <PlaceholderPage title="Dashboard" />,
       },
-      { path: ROUTES.CLIENTS, element: <PlaceholderPage title="Clients" /> },
+      { path: ROUTES.CLIENTS, element: <ClientsPage /> },
       {
         path: ROUTES.SCHEDULING,
         element: <PlaceholderPage title="Scheduling" />,

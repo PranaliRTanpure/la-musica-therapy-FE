@@ -39,9 +39,9 @@ declare module '@mui/material/styles' {
 // --- 1. PALETTE (replace hex values with the design's actual colors) ---
 const palette = {
   primary: {
-    main: '#2563EB', // TODO: replace with design's primary
-    light: '#60A5FA',
-    dark: '#1E40AF',
+    main: '#2159ba', // --color-primary  (--brand-7)
+    dark: '#2c6bdb', // --color-primary-hover (--brand-8)
+    light: '#8db9ff', // --color-primary-subtle (--brand-4)
     contrastText: '#FFFFFF',
   },
   secondary: {
@@ -130,6 +130,45 @@ export const theme = createTheme({
       defaultProps: { elevation: 0 },
       styleOverrides: {
         root: { border: `1px solid ${palette.divider}` },
+      },
+    },
+    // --- Shared table styling (single source of truth for ALL tables) ---
+    // Every table rendered via the common DataTable inherits this look, so the
+    // Leads / Prospects / Waiting List / Clients tables stay identical.
+    MuiTableContainer: {
+      styleOverrides: {
+        root: { borderRadius: shape.borderRadius },
+      },
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          borderColor: palette.divider,
+          whiteSpace: 'nowrap',
+          fontSize: typography.body2.fontSize,
+          // Tighter vertical padding than MUI's default so table rows are more
+          // compact; horizontal padding stays at the default 16px so columns
+          // keep breathing room. (Row height floors ~43px on the checkbox/
+          // action controls, so 4px is near the practical minimum.)
+          paddingTop: 4,
+          paddingBottom: 4,
+        },
+        head: {
+          backgroundColor: palette.background.default,
+          color: palette.text.secondary,
+          fontWeight: 600,
+        },
+        body: {
+          color: palette.text.primary,
+        },
+      },
+    },
+    MuiTableRow: {
+      styleOverrides: {
+        // Slightly softer hover than MUI's default for long, dense rows.
+        hover: {
+          '&:hover': { backgroundColor: palette.background.default },
+        },
       },
     },
   },
