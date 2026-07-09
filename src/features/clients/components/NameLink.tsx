@@ -1,17 +1,30 @@
 import Link from '@mui/material/Link';
+import { Link as RouterLink } from 'react-router-dom';
 
 interface NameLinkProps {
   children: string;
-  /**
-   * Fired when the name is activated. Wire this to navigation once the API is
-   * connected (e.g. a React Router `RouterLink` to `/clients/:id`); until then
-   * it stays optional so the component is action-ready without a dead control.
-   */
+  /** Router destination. When set, the name renders as a navigation link. */
+  to?: string;
+  /** Fallback click handler used when no `to` is provided. */
   onClick?: () => void;
 }
 
 /** The blue, clickable name shown in the first column of every Clients table. */
-export function NameLink({ children, onClick }: NameLinkProps) {
+export function NameLink({ children, to, onClick }: NameLinkProps) {
+  if (to) {
+    return (
+      <Link
+        component={RouterLink}
+        to={to}
+        underline="hover"
+        color="primary"
+        sx={{ fontWeight: 600, textAlign: 'left' }}
+      >
+        {children}
+      </Link>
+    );
+  }
+
   return (
     <Link
       component="button"

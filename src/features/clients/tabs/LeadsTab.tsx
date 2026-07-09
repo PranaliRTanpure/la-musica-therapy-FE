@@ -7,12 +7,13 @@ import { StatusChip } from '@/components/common/StatusChip';
 import { NameLink } from '../components/NameLink';
 import { LEADS } from '../data';
 import type { LeadRow } from '../types';
+import { leadDetailPath } from '@/config/routes';
 
 const columns: DataTableColumn<LeadRow>[] = [
   {
     id: 'name',
     label: 'Lead Name',
-    render: (r) => <NameLink>{r.name}</NameLink>,
+    render: (r) => <NameLink to={leadDetailPath(r.id)}>{r.name}</NameLink>,
   },
   { id: 'phone', label: 'Phone Number', render: (r) => r.phone },
   { id: 'email', label: 'Email', render: (r) => r.email },
@@ -45,12 +46,17 @@ const columns: DataTableColumn<LeadRow>[] = [
   { id: 'createdOn', label: 'Created On', render: (r) => r.createdOn },
 ];
 
-export function LeadsTab() {
+interface LeadsTabProps {
+  /** Rows to display; defaults to all leads. Parent passes filtered rows. */
+  rows?: LeadRow[];
+}
+
+export function LeadsTab({ rows = LEADS }: LeadsTabProps) {
   return (
     <DataTable
       ariaLabel="Leads"
       columns={columns}
-      rows={LEADS}
+      rows={rows}
       getRowId={(r) => r.id}
     />
   );

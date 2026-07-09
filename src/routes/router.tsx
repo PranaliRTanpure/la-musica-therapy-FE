@@ -2,6 +2,7 @@ import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { PlaceholderPage } from '@/pages/PlaceholderPage';
 import { ClientsPage } from '@/features/clients/ClientsPage';
+import { AddLeadPage } from '@/features/leads/AddLeadPage';
 import { ROUTES } from '@/config/routes';
 
 export const router = createBrowserRouter([
@@ -15,6 +16,8 @@ export const router = createBrowserRouter([
         element: <PlaceholderPage title="Dashboard" />,
       },
       { path: ROUTES.CLIENTS, element: <ClientsPage /> },
+      { path: ROUTES.LEADS_NEW, element: <AddLeadPage /> },
+      { path: ROUTES.LEADS_DETAIL, element: <AddLeadPage /> },
       {
         path: ROUTES.SCHEDULING,
         element: <PlaceholderPage title="Scheduling" />,

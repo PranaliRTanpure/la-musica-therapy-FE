@@ -18,6 +18,12 @@ declare module '@mui/material/styles' {
   interface PaletteOptions {
     nav?: Palette['nav'];
   }
+  // The design's "semibold" weight (between MUI's medium 500 and bold 700),
+  // used for field labels, section titles, etc. Reference via
+  // `theme.typography.fontWeightSemiBold` instead of hardcoding 600.
+  interface FontStyle {
+    fontWeightSemiBold: number;
+  }
 }
 
 /**
@@ -87,6 +93,7 @@ const typography = {
     'Roboto',
     'sans-serif',
   ].join(','),
+  fontWeightSemiBold: 600,
   h1: { fontSize: '2.5rem', fontWeight: 700, lineHeight: 1.2 },
   h2: { fontSize: '2rem', fontWeight: 700, lineHeight: 1.25 },
   h3: { fontSize: '1.5rem', fontWeight: 600, lineHeight: 1.3 },
