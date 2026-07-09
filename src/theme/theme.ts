@@ -45,7 +45,7 @@ declare module '@mui/material/styles' {
 // --- 1. PALETTE (replace hex values with the design's actual colors) ---
 const palette = {
   primary: {
-    main: '#2159ba', // --color-primary  (--brand-7)
+    main: '#357cf7', // --color-primary  (--brand-7)
     dark: '#2c6bdb', // --color-primary-hover (--brand-8)
     light: '#8db9ff', // --color-primary-subtle (--brand-4)
     contrastText: '#FFFFFF',

@@ -4,12 +4,13 @@ import { StatusChip } from '@/components/common/StatusChip';
 import { NameLink } from '../components/NameLink';
 import { PROSPECTS } from '../data';
 import type { ProspectRow } from '../types';
+import { patientChartPath } from '@/config/routes';
 
 const columns: DataTableColumn<ProspectRow>[] = [
   {
     id: 'name',
     label: 'Prospect Name',
-    render: (r) => <NameLink>{r.name}</NameLink>,
+    render: (r) => <NameLink to={patientChartPath(r.id)}>{r.name}</NameLink>,
   },
   { id: 'phone', label: 'Phone Number', render: (r) => r.phone },
   { id: 'email', label: 'Email', render: (r) => r.email },

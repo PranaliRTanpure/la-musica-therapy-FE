@@ -27,7 +27,7 @@ function toneMain(theme: Theme, tone: StatusTone): string {
     case 'warning':
       return theme.palette.warning.main;
     case 'info':
-      return theme.palette.info.main;
+      return theme.palette.primary.main;
     default:
       return theme.palette.text.secondary;
   }

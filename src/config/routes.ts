@@ -8,6 +8,8 @@ export const ROUTES = {
   LEADS_NEW: '/clients/leads/new',
   /** Existing lead's form (opened from the leads list); `:id` = lead id. */
   LEADS_DETAIL: '/clients/leads/:id',
+  /** Patient charting (opened from prospect/waiting-list/client name); `:id`. */
+  PATIENT_CHART: '/clients/patients/:id',
   SCHEDULING: '/scheduling',
   COMMUNICATION: '/communication',
   SETTINGS: '/settings',
@@ -17,3 +19,6 @@ export type RoutePath = (typeof ROUTES)[keyof typeof ROUTES];
 
 /** Build the concrete path to a lead's form for `LEADS_DETAIL`. */
 export const leadDetailPath = (id: string) => `/clients/leads/${id}`;
+
+/** Build the concrete path to a patient's chart for `PATIENT_CHART`. */
+export const patientChartPath = (id: string) => `/clients/patients/${id}`;
