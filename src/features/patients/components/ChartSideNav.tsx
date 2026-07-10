@@ -19,8 +19,12 @@ export interface ChartSideNavProps {
   sx?: SxProps<Theme>;
 }
 
-/** Vertical section nav for the chart (Documents / Notes / Profile). Controlled
- * by props; the active item is tinted with the primary color. */
+/**
+ * Section nav for the chart (Documents / Notes / Profile). A vertical rail on
+ * desktop; below `md` it becomes a horizontal, scrollable strip so it costs one
+ * row of height instead of one row per item. Controlled by props; the active
+ * item is tinted with the primary color.
+ */
 export function ChartSideNav({
   items,
   active,
@@ -28,7 +32,19 @@ export function ChartSideNav({
   sx,
 }: ChartSideNavProps) {
   return (
-    <List component="nav" sx={sx}>
+    <List
+      component="nav"
+      sx={[
+        {
+          display: 'flex',
+          flexDirection: { xs: 'row', md: 'column' },
+          gap: 0.5,
+          overflowX: { xs: 'auto', md: 'visible' },
+          WebkitOverflowScrolling: 'touch',
+        },
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
+    >
       {items.map((item) => (
         <ListItemButton
           key={item.id}
@@ -36,7 +52,13 @@ export function ChartSideNav({
           onClick={() => onChange(item.id)}
           sx={(theme) => ({
             borderRadius: 1,
-            mb: 0.5,
+            // MUI's ListItemButton ships `flexGrow: 1`, inert in the List's
+            // default block layout but active now that the List is a flex
+            // container — it would stretch items down the rail (and across the
+            // mobile strip). Size to content instead.
+            flexGrow: 0,
+            // Don't let items squash below their label on a narrow strip.
+            flexShrink: 0,
             '&.Mui-selected': {
               bgcolor: alpha(theme.palette.primary.main, 0.1),
               color: 'primary.main',
@@ -45,7 +67,9 @@ export function ChartSideNav({
             },
           })}
         >
-          <ListItemIcon sx={{ minWidth: 36, color: 'text.secondary' }}>
+          <ListItemIcon
+            sx={{ minWidth: { xs: 32, md: 36 }, color: 'text.secondary' }}
+          >
             {item.icon}
           </ListItemIcon>
           <ListItemText
@@ -53,6 +77,7 @@ export function ChartSideNav({
             slotProps={{
               primary: {
                 variant: 'body2',
+                noWrap: true,
                 sx: (theme) => ({
                   fontWeight: theme.typography.fontWeightBold,
                 }),

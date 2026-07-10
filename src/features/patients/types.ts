@@ -32,6 +32,24 @@ export interface PatientContact {
   paymentSource: string;
 }
 
+/** A read-only label/value pair. An empty `value` renders as an em dash. */
+export interface LabeledField {
+  label: string;
+  value: string;
+}
+
+/** How many columns a profile section uses at the `md` breakpoint and up. */
+export type ProfileColumns = 2 | 3 | 4;
+
+/** One titled card on the Profile tab. */
+export interface ProfileSection {
+  id: string;
+  title: string;
+  /** Defaults to 4. Long-form prose sections use 2. */
+  columns?: ProfileColumns;
+  fields: LabeledField[];
+}
+
 /** One form sent to the patient, tracked from sent → completed. */
 export interface PatientForm {
   id: string;
@@ -76,4 +94,5 @@ export interface PatientChart {
   contact: PatientContact;
   documents: PatientDocument[];
   forms: PatientForm[];
+  profile: ProfileSection[];
 }

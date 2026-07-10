@@ -38,6 +38,77 @@ export const SAMPLE_PATIENT: PatientChart = {
     address: '5777 Verdugo Rd, Pasadena, CA 91101',
     paymentSource: 'Regional Center',
   },
+  profile: [
+    {
+      id: 'patient-information',
+      title: 'Patient Information (Client Intake & Trial Session)',
+      columns: 4,
+      fields: [
+        { label: 'Name', value: 'Julian Flores' },
+        { label: 'Date of Birth', value: '06/11/2003' },
+        { label: 'Age', value: '23 yrs' },
+        { label: 'Gender', value: 'Female' },
+        { label: 'Ethnicity', value: 'Asian' },
+        { label: 'Diagnosis', value: 'Developmental Delay' },
+        { label: 'Language Spoken', value: 'English' },
+        { label: 'Phone', value: '(305) 555-6795' },
+        { label: 'Email', value: 'julian.flores@example.com' },
+        { label: 'Address', value: '5777 Verdugo Rd, Pasadena, CA 91101' },
+        { label: 'Payment Source', value: 'Regional Center' },
+        { label: 'Referral Source', value: 'Intake Form' },
+      ],
+    },
+    {
+      id: 'parent-guardian',
+      title: 'Parent / Guardian (Trial Session Information)',
+      columns: 3,
+      fields: [
+        { label: 'Guardian Name', value: 'John Flores' },
+        { label: 'Relationship', value: 'Parent' },
+        { label: 'Guardian Phone', value: '(818) 555-0477' },
+      ],
+    },
+    {
+      id: 'hipaa-consent',
+      title: 'HIPAA Consent',
+      columns: 3,
+      fields: [
+        { label: 'Print Name of Patient', value: 'Julian Flores' },
+        // Empty values render as an em dash via `LabeledValue`.
+        { label: 'Legal Representative', value: '' },
+        { label: 'Relationship of Legal Rep', value: '' },
+        { label: 'Acknowledgement', value: 'Received & signed' },
+        { label: 'Confirm Appointments Via', value: 'Email, Text Message' },
+        { label: 'Share Health Info Via', value: 'Email' },
+      ],
+    },
+    {
+      id: 'about-the-client',
+      title: 'About the Client (Trial Session Information)',
+      columns: 2,
+      fields: [
+        {
+          label: 'Musical Experience',
+          value:
+            'Responds to rhythm and familiar melodies; sings along to preferred songs.',
+        },
+        {
+          label: 'Areas of Strength / Needs',
+          value:
+            'Strong melodic response; working on expressive communication and attention.',
+        },
+        {
+          label: 'Instruments of Interest',
+          value: 'Piano, Drums / percussion',
+        },
+        {
+          label: 'Program Goals',
+          value:
+            'Improve communication, attention, and emotional regulation through music therapy.',
+        },
+      ],
+    },
+  ],
   forms: [
     {
       id: 'f1',

@@ -21,6 +21,7 @@ import { DocumentList } from './components/DocumentList';
 import { DocumentViewer } from './components/DocumentViewer';
 import { FormList } from './components/FormList';
 import { FormViewer } from './components/FormViewer';
+import { ProfilePanel } from './components/ProfilePanel';
 import { SAMPLE_PATIENT } from './data';
 
 const NAV_ITEMS = [
@@ -100,15 +101,22 @@ export function PatientChartingPage() {
 
   return (
     <Box
-      sx={{ p: 1, height: '100%', display: 'flex', flexDirection: 'column' }}
+      sx={{
+        p: 1,
+        // Desktop pins the chart to the viewport so only the content pane
+        // scrolls (keeps the viewer's footer visible). On mobile everything
+        // stacks, so height: 100% would squeeze the content into a tiny inner
+        // scroller — let the page grow and scroll in AppLayout instead.
+        height: { xs: 'auto', md: '100%' },
+        display: 'flex',
+        flexDirection: 'column',
+      }}
     >
-      {/* Column flex so the header sizes naturally and only the content pane
-          scrolls — otherwise the viewer's footer is clipped by overflow. */}
       <Paper
         sx={{
           borderRadius: 2,
           overflow: 'hidden',
-          flex: 1,
+          flex: { xs: '0 0 auto', md: 1 },
           minHeight: 0,
           display: 'flex',
           flexDirection: 'column',
@@ -144,14 +152,15 @@ export function PatientChartingPage() {
               flex: 1,
               minWidth: 0,
               minHeight: 0,
-              overflow: 'auto',
+              // No nested scroller on mobile — the page itself scrolls.
+              overflow: { xs: 'visible', md: 'auto' },
               WebkitOverflowScrolling: 'touch',
               bgcolor: 'background.default',
               p: { xs: 2, md: 3 },
             }}
           >
             {nav === 'documents' ? (
-              <Stack spacing={2} sx={{ height: '100%', minHeight: 0 }}>
+              <Stack spacing={2} sx={{ height: { md: '100%' }, minHeight: 0 }}>
                 <Stack
                   direction={{ xs: 'column', sm: 'row' }}
                   justifyContent="space-between"
@@ -241,10 +250,10 @@ export function PatientChartingPage() {
                   <EmptyPanel text="No forms sent yet." />
                 )}
               </Stack>
+            ) : nav === 'profile' ? (
+              <ProfilePanel sections={patient.profile} />
             ) : (
-              <EmptyPanel
-                text={`${nav === 'notes' ? 'Notes' : 'Profile'} coming soon.`}
-              />
+              <EmptyPanel text="Notes coming soon." />
             )}
           </Box>
         </Box>

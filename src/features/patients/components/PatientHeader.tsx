@@ -23,11 +23,23 @@ export function PatientHeader({ patient, onBack }: PatientHeaderProps) {
       spacing={2}
       sx={{ p: { xs: 2, md: 2 } }}
     >
-      <Stack direction="row" alignItems="center" spacing={2}>
-        <IconButton aria-label="Back" onClick={onBack}>
+      <Stack
+        direction="row"
+        alignItems="center"
+        spacing={{ xs: 1, md: 2 }}
+        sx={{ minWidth: 0, width: '100%' }}
+      >
+        <IconButton aria-label="Back" onClick={onBack} sx={{ flexShrink: 0 }}>
           <ArrowBackIcon />
         </IconButton>
-        <Avatar sx={{ bgcolor: 'primary.main', width: 48, height: 48 }}>
+        <Avatar
+          sx={{
+            bgcolor: 'primary.main',
+            width: { xs: 40, md: 48 },
+            height: { xs: 40, md: 48 },
+            flexShrink: 0,
+          }}
+        >
           {patient.name.charAt(0)}
         </Avatar>
         {/* minWidth:0 lets the meta rows wrap instead of overflowing on mobile */}
@@ -73,7 +85,12 @@ export function PatientHeader({ patient, onBack }: PatientHeaderProps) {
           </Stack>
         </Box>
       </Stack>
-      <Button variant="outlined">Edit</Button>
+      <Button
+        variant="outlined"
+        sx={{ flexShrink: 0, alignSelf: { xs: 'stretch', md: 'center' } }}
+      >
+        Edit
+      </Button>
     </Stack>
   );
 }
