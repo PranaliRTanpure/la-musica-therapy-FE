@@ -32,13 +32,24 @@ export interface PatientContact {
   paymentSource: string;
 }
 
-/** One form/document in the patient's chart. */
-export interface PatientFormDocument {
+/** A label/value row inside a document's rendered sheet. */
+export interface DocumentDetail {
+  label: string;
+  value: string;
+}
+
+/** One uploaded document in the patient's chart. */
+export interface PatientDocument {
   id: string;
   title: string;
-  status: ChartStatus;
-  sentOn: string;
-  completedOn: string | null;
+  /** Chip on the card, e.g. "by Provider". */
+  source: ChartStatus;
+  /** ISO date; display goes through `formatShortDate` in `src/utils/date.ts`. */
+  uploadedOn: string;
+  uploadedBy: string;
+  /** Body copy of the rendered document sheet. */
+  summary: string;
+  details: DocumentDetail[];
 }
 
 export interface PatientChart {
@@ -52,5 +63,5 @@ export interface PatientChart {
   language: string;
   demographics: PatientDemographics;
   contact: PatientContact;
-  documents: PatientFormDocument[];
+  documents: PatientDocument[];
 }

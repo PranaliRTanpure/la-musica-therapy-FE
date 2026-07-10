@@ -21,3 +21,9 @@ export function toLocal(iso: string, tz: string = APP_TZ): Date {
 export function fmt(date: Date | number, pattern = 'dd MMM yyyy'): string {
   return format(date, pattern);
 }
+
+/** Format an ISO date string for display. Safari rejects non-ISO input, so
+ * always parse via `parseISO` rather than `new Date(string)`. */
+export function formatShortDate(iso: string, pattern = 'MM/dd/yyyy'): string {
+  return format(parseISO(iso), pattern);
+}

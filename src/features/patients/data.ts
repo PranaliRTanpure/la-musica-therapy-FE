@@ -41,10 +41,31 @@ export const SAMPLE_PATIENT: PatientChart = {
   documents: [
     {
       id: 'd1',
-      title: 'Consent Form',
-      status: { label: 'Pending', tone: 'warning' },
-      sentOn: '10/08/2026',
-      completedOn: null,
+      title: 'Referral Letter',
+      source: { label: 'by Provider', tone: 'warning' },
+      uploadedOn: '2026-11-02',
+      uploadedBy: 'Nicole Adams',
+      summary:
+        'This confirms that Julian Flores (Patient ID: LM-35877) has been referred to LA Musica Therapy on 11/02/2026 for a music therapy evaluation. Based on the presenting needs, individual music therapy services are recommended.',
+      details: [
+        { label: 'Diagnosis', value: 'Developmental Delay' },
+        { label: 'Recommended Program', value: 'Individual Music Therapy' },
+        { label: 'Referring Provider', value: 'Dr. Nicole Adams' },
+      ],
+    },
+    {
+      id: 'd2',
+      title: 'Authorization Form',
+      source: { label: 'by Provider', tone: 'warning' },
+      uploadedOn: '2026-11-05',
+      uploadedBy: 'Nicole Adams',
+      summary:
+        'Julian Flores (Patient ID: LM-35877) authorizes LA Musica Therapy to provide music therapy services and to share treatment records with the referring provider as required for continuity of care.',
+      details: [
+        { label: 'Authorization Period', value: '11/05/2026 – 05/05/2027' },
+        { label: 'Authorized Sessions', value: '24' },
+        { label: 'Payment Source', value: 'Regional Center' },
+      ],
     },
   ],
 };

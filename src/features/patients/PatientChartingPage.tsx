@@ -12,12 +12,13 @@ import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import SearchIcon from '@mui/icons-material/Search';
-import PrintOutlinedIcon from '@mui/icons-material/PrintOutlined';
-import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
+import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import { AppTabs } from '@/components/common/AppTabs';
+import { UploadFileModal } from '@/components/common/UploadFileModal';
 import { PatientHeader } from './components/PatientHeader';
 import { ChartSideNav } from './components/ChartSideNav';
 import { DocumentList } from './components/DocumentList';
+import { DocumentViewer } from './components/DocumentViewer';
 import { FormDetail } from './components/FormDetail';
 import { SAMPLE_PATIENT } from './data';
 
@@ -40,6 +41,8 @@ const NAV_ITEMS = [
 ];
 
 const DOC_TABS = [{ label: 'Documents' }, { label: 'Forms' }];
+const TAB_DOCUMENTS = 0;
+const TAB_FORMS = 1;
 
 function EmptyPanel({ text }: { text: string }) {
   return (
@@ -60,14 +63,32 @@ export function PatientChartingPage() {
   const navigate = useNavigate();
   const patient = SAMPLE_PATIENT;
   const [nav, setNav] = useState('documents');
-  const [docTab, setDocTab] = useState(1); // "Forms" active, per the design
+  const [docTab, setDocTab] = useState(TAB_DOCUMENTS);
+  const [uploadOpen, setUploadOpen] = useState(false);
   const [selectedDoc, setSelectedDoc] = useState(
     patient.documents[0]?.id ?? ''
   );
 
+  const openDoc =
+    patient.documents.find((doc) => doc.id === selectedDoc) ??
+    patient.documents[0];
+
   return (
-    <Box sx={{ p: { xs: 1, md: 1 }, height: '100%' }}>
-      <Paper sx={{ borderRadius: 2, overflow: 'hidden', height: '100%' }}>
+    <Box
+      sx={{ p: 1, height: '100%', display: 'flex', flexDirection: 'column' }}
+    >
+      {/* Column flex so the header sizes naturally and only the content pane
+          scrolls — otherwise the viewer's footer is clipped by overflow. */}
+      <Paper
+        sx={{
+          borderRadius: 2,
+          overflow: 'hidden',
+          flex: 1,
+          minHeight: 0,
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
         <PatientHeader patient={patient} onBack={() => navigate(-1)} />
         <Divider />
 
@@ -75,7 +96,8 @@ export function PatientChartingPage() {
           sx={{
             display: 'flex',
             flexDirection: { xs: 'column', md: 'row' },
-            height: '100%',
+            flex: 1,
+            minHeight: 0,
           }}
         >
           <ChartSideNav
@@ -96,18 +118,21 @@ export function PatientChartingPage() {
             sx={{
               flex: 1,
               minWidth: 0,
+              minHeight: 0,
+              overflow: 'auto',
+              WebkitOverflowScrolling: 'touch',
               bgcolor: 'background.default',
               p: { xs: 2, md: 3 },
-              height: '100%',
             }}
           >
             {nav === 'documents' ? (
-              <Stack spacing={2}>
+              <Stack spacing={2} sx={{ height: '100%', minHeight: 0 }}>
                 <Stack
                   direction={{ xs: 'column', sm: 'row' }}
                   justifyContent="space-between"
                   alignItems={{ xs: 'stretch', sm: 'center' }}
                   spacing={2}
+                  sx={{ flexShrink: 0 }}
                 >
                   <AppTabs
                     ariaLabel="Document type"
@@ -115,64 +140,84 @@ export function PatientChartingPage() {
                     value={docTab}
                     onChange={setDocTab}
                   />
-                  <TextField
-                    placeholder="Search..."
-                    size="small"
-                    sx={(theme) => ({
-                      maxWidth: { sm: 260 },
-                      bgcolor: 'background.paper',
-                      '& .MuiInputBase-input': {
-                        fontSize: theme.typography.body1.fontSize,
-                      },
-                    })}
-                    slotProps={{
-                      htmlInput: { 'aria-label': 'Search documents' },
-                      input: {
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <SearchIcon fontSize="small" />
-                          </InputAdornment>
-                        ),
-                      },
-                    }}
-                  />
-                </Stack>
-
-                {docTab === 1 ? (
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: { xs: 'column', md: 'row' },
-                      gap: 2,
-                      alignItems: 'flex-start',
-                      height: '100%',
-                    }}
+                  <Stack
+                    direction={{ xs: 'column', sm: 'row' }}
+                    spacing={1.5}
+                    alignItems={{ sm: 'center' }}
                   >
-                    <DocumentList
-                      documents={patient.documents}
-                      selectedId={selectedDoc}
-                      onSelect={setSelectedDoc}
-                      sx={{ width: { xs: '100%', md: 360 }, flexShrink: 0 }}
+                    <TextField
+                      placeholder="Search..."
+                      size="small"
+                      sx={(theme) => ({
+                        maxWidth: { sm: 260 },
+                        bgcolor: 'background.paper',
+                        '& .MuiInputBase-input': {
+                          fontSize: theme.typography.body1.fontSize,
+                        },
+                      })}
+                      slotProps={{
+                        htmlInput: { 'aria-label': 'Search documents' },
+                        input: {
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <SearchIcon fontSize="small" />
+                            </InputAdornment>
+                          ),
+                        },
+                      }}
                     />
-                    <Box sx={{ flex: 1, minWidth: 0, width: '100%' }}>
-                      <FormDetail patient={patient} title="Consent Form" />
-                    </Box>
-                  </Box>
-                ) : (
-                  <EmptyPanel text="No documents uploaded yet." />
-                )}
-
-                <Stack direction="row" justifyContent="flex-end" spacing={1.5}>
-                  <Button variant="outlined" startIcon={<PrintOutlinedIcon />}>
-                    Print
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    startIcon={<FileDownloadOutlinedIcon />}
-                  >
-                    Download
-                  </Button>
+                    <Button
+                      variant="contained"
+                      startIcon={<FileUploadOutlinedIcon />}
+                      onClick={() => setUploadOpen(true)}
+                      sx={{ flexShrink: 0 }}
+                    >
+                      Upload
+                    </Button>
+                  </Stack>
                 </Stack>
+
+                {docTab === TAB_DOCUMENTS ? (
+                  openDoc ? (
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        flexDirection: { xs: 'column', md: 'row' },
+                        gap: 2,
+                        flex: 1,
+                        minHeight: 0,
+                      }}
+                    >
+                      <DocumentList
+                        documents={patient.documents}
+                        selectedId={selectedDoc}
+                        onSelect={setSelectedDoc}
+                        sx={{
+                          width: {
+                            xs: '100%',
+                            md: 'clamp(17.5rem, 28%, 22.5rem)',
+                          },
+                          flexShrink: 0,
+                          alignSelf: 'flex-start',
+                        }}
+                      />
+                      <DocumentViewer
+                        doc={openDoc}
+                        sx={{
+                          flex: 1,
+                          minWidth: 0,
+                          minHeight: { xs: '60svh', md: 0 },
+                        }}
+                      />
+                    </Box>
+                  ) : (
+                    <EmptyPanel text="No documents uploaded yet." />
+                  )
+                ) : null}
+
+                {docTab === TAB_FORMS ? (
+                  <FormDetail patient={patient} title="Consent Form" />
+                ) : null}
               </Stack>
             ) : (
               <EmptyPanel
@@ -182,6 +227,13 @@ export function PatientChartingPage() {
           </Box>
         </Box>
       </Paper>
+
+      {/* Static phase: the upload is accepted and discarded until the API lands. */}
+      <UploadFileModal
+        open={uploadOpen}
+        onClose={() => setUploadOpen(false)}
+        onUpload={() => undefined}
+      />
     </Box>
   );
 }

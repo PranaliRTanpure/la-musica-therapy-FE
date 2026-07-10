@@ -18,9 +18,16 @@ declare module '@mui/material/styles' {
   interface PaletteOptions {
     nav?: Palette['nav'];
   }
-  // The design's "semibold" weight (between MUI's medium 500 and bold 700),
-  // used for field labels, section titles, etc. Reference via
-  // `theme.typography.fontWeightSemiBold` instead of hardcoding 600.
+}
+
+// The design's "semibold" weight (between MUI's medium 500 and bold 700), used
+// for field labels, section titles, etc. Reference via
+// `theme.typography.fontWeightSemiBold` instead of hardcoding 600.
+//
+// `FontStyle` is declared in `createTypography`, so it must be augmented there:
+// augmenting the `@mui/material/styles` re-export declares a *separate*
+// interface that `theme.typography` never picks up.
+declare module '@mui/material/styles/createTypography' {
   interface FontStyle {
     fontWeightSemiBold: number;
   }

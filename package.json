@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx,css,json}\"",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc -b --noEmit",
     "api:gen": "orval --config ./orval.config.ts",
     "review": "node scripts/ai-review.mjs",
     "prepare": "husky",
