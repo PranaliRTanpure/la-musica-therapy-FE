@@ -1,17 +1,15 @@
 import Grid from '@mui/material/Grid2';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { LabeledValue } from '@/components/common/LabeledValue';
 import { InfoCard } from './InfoCard';
 import type { PatientChart } from '../types';
 
 export interface FormDetailProps {
   patient: PatientChart;
-  title: string;
 }
 
 /** The selected form's read-only content: Demographics + Contact info cards. */
-export function FormDetail({ patient, title }: FormDetailProps) {
+export function FormDetail({ patient }: FormDetailProps) {
   const d = patient.demographics;
   const c = patient.contact;
 
@@ -43,13 +41,6 @@ export function FormDetail({ patient, title }: FormDetailProps) {
 
   return (
     <Stack spacing={2}>
-      <Typography
-        variant="subtitle1"
-        sx={(theme) => ({ fontWeight: theme.typography.fontWeightSemiBold })}
-      >
-        {title}
-      </Typography>
-
       <InfoCard title="Demographics Info">
         <Grid container spacing={2}>
           {demographics.map(([label, value]) => (

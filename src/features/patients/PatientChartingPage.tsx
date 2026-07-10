@@ -19,7 +19,8 @@ import { PatientHeader } from './components/PatientHeader';
 import { ChartSideNav } from './components/ChartSideNav';
 import { DocumentList } from './components/DocumentList';
 import { DocumentViewer } from './components/DocumentViewer';
-import { FormDetail } from './components/FormDetail';
+import { FormList } from './components/FormList';
+import { FormViewer } from './components/FormViewer';
 import { SAMPLE_PATIENT } from './data';
 
 const NAV_ITEMS = [
@@ -42,7 +43,27 @@ const NAV_ITEMS = [
 
 const DOC_TABS = [{ label: 'Documents' }, { label: 'Forms' }];
 const TAB_DOCUMENTS = 0;
-const TAB_FORMS = 1;
+
+/** Documents and Forms share one split layout: selection list + detail panel. */
+const SPLIT_SX = {
+  display: 'flex',
+  flexDirection: { xs: 'column', md: 'row' },
+  gap: 2,
+  flex: 1,
+  minHeight: 0,
+} as const;
+
+const LIST_SX = {
+  width: { xs: '100%', md: 'clamp(17.5rem, 28%, 22.5rem)' },
+  flexShrink: 0,
+  alignSelf: 'flex-start',
+} as const;
+
+const VIEWER_SX = {
+  flex: 1,
+  minWidth: 0,
+  minHeight: { xs: '60svh', md: 0 },
+} as const;
 
 function EmptyPanel({ text }: { text: string }) {
   return (
@@ -68,10 +89,14 @@ export function PatientChartingPage() {
   const [selectedDoc, setSelectedDoc] = useState(
     patient.documents[0]?.id ?? ''
   );
+  const [selectedForm, setSelectedForm] = useState(patient.forms[0]?.id ?? '');
 
+  const isDocumentsTab = docTab === TAB_DOCUMENTS;
   const openDoc =
     patient.documents.find((doc) => doc.id === selectedDoc) ??
     patient.documents[0];
+  const openForm =
+    patient.forms.find((form) => form.id === selectedForm) ?? patient.forms[0];
 
   return (
     <Box
@@ -156,7 +181,11 @@ export function PatientChartingPage() {
                         },
                       })}
                       slotProps={{
-                        htmlInput: { 'aria-label': 'Search documents' },
+                        htmlInput: {
+                          'aria-label': isDocumentsTab
+                            ? 'Search documents'
+                            : 'Search forms',
+                        },
                         input: {
                           startAdornment: (
                             <InputAdornment position="start">
@@ -166,58 +195,51 @@ export function PatientChartingPage() {
                         },
                       }}
                     />
-                    <Button
-                      variant="contained"
-                      startIcon={<FileUploadOutlinedIcon />}
-                      onClick={() => setUploadOpen(true)}
-                      sx={{ flexShrink: 0 }}
-                    >
-                      Upload
-                    </Button>
+                    {/* Forms are sent to the patient, not uploaded here. */}
+                    {isDocumentsTab ? (
+                      <Button
+                        variant="contained"
+                        startIcon={<FileUploadOutlinedIcon />}
+                        onClick={() => setUploadOpen(true)}
+                        sx={{ flexShrink: 0 }}
+                      >
+                        Upload
+                      </Button>
+                    ) : null}
                   </Stack>
                 </Stack>
 
-                {docTab === TAB_DOCUMENTS ? (
+                {isDocumentsTab ? (
                   openDoc ? (
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        flexDirection: { xs: 'column', md: 'row' },
-                        gap: 2,
-                        flex: 1,
-                        minHeight: 0,
-                      }}
-                    >
+                    <Box sx={SPLIT_SX}>
                       <DocumentList
                         documents={patient.documents}
                         selectedId={selectedDoc}
                         onSelect={setSelectedDoc}
-                        sx={{
-                          width: {
-                            xs: '100%',
-                            md: 'clamp(17.5rem, 28%, 22.5rem)',
-                          },
-                          flexShrink: 0,
-                          alignSelf: 'flex-start',
-                        }}
+                        sx={LIST_SX}
                       />
-                      <DocumentViewer
-                        doc={openDoc}
-                        sx={{
-                          flex: 1,
-                          minWidth: 0,
-                          minHeight: { xs: '60svh', md: 0 },
-                        }}
-                      />
+                      <DocumentViewer doc={openDoc} sx={VIEWER_SX} />
                     </Box>
                   ) : (
                     <EmptyPanel text="No documents uploaded yet." />
                   )
-                ) : null}
-
-                {docTab === TAB_FORMS ? (
-                  <FormDetail patient={patient} title="Consent Form" />
-                ) : null}
+                ) : openForm ? (
+                  <Box sx={SPLIT_SX}>
+                    <FormList
+                      forms={patient.forms}
+                      selectedId={selectedForm}
+                      onSelect={setSelectedForm}
+                      sx={LIST_SX}
+                    />
+                    <FormViewer
+                      form={openForm}
+                      patient={patient}
+                      sx={VIEWER_SX}
+                    />
+                  </Box>
+                ) : (
+                  <EmptyPanel text="No forms sent yet." />
+                )}
               </Stack>
             ) : (
               <EmptyPanel

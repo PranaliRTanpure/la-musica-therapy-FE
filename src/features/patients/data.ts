@@ -38,6 +38,15 @@ export const SAMPLE_PATIENT: PatientChart = {
     address: '5777 Verdugo Rd, Pasadena, CA 91101',
     paymentSource: 'Regional Center',
   },
+  forms: [
+    {
+      id: 'f1',
+      title: 'Consent Form',
+      status: { label: 'Pending', tone: 'warning' },
+      sentOn: '2026-10-08',
+      completedOn: null,
+    },
+  ],
   documents: [
     {
       id: 'd1',

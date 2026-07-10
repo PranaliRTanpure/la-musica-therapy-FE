@@ -32,6 +32,17 @@ export interface PatientContact {
   paymentSource: string;
 }
 
+/** One form sent to the patient, tracked from sent → completed. */
+export interface PatientForm {
+  id: string;
+  title: string;
+  status: ChartStatus;
+  /** ISO dates; display goes through `formatShortDate` in `src/utils/date.ts`. */
+  sentOn: string;
+  /** `null` until the patient completes the form. */
+  completedOn: string | null;
+}
+
 /** A label/value row inside a document's rendered sheet. */
 export interface DocumentDetail {
   label: string;
@@ -64,4 +75,5 @@ export interface PatientChart {
   demographics: PatientDemographics;
   contact: PatientContact;
   documents: PatientDocument[];
+  forms: PatientForm[];
 }
