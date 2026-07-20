@@ -1,7 +1,7 @@
 import { DataTable } from '@/components/common/DataTable';
 import type { DataTableColumn } from '@/components/common/DataTable';
 import { StatusChip } from '@/components/common/StatusChip';
-import { NameLink } from '../components/NameLink';
+import { NameLink } from '@/components/common/NameLink';
 import { WAITING_LIST } from '../data';
 import type { WaitingListRow } from '../types';
 import { patientChartPath } from '@/config/routes';

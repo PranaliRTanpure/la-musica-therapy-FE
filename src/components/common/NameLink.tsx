@@ -9,7 +9,7 @@ interface NameLinkProps {
   onClick?: () => void;
 }
 
-/** The blue, clickable name shown in the first column of every Clients table. */
+/** The blue, clickable name shown in the first column of every data table. */
 export function NameLink({ children, to, onClick }: NameLinkProps) {
   if (to) {
     return (
@@ -18,7 +18,10 @@ export function NameLink({ children, to, onClick }: NameLinkProps) {
         to={to}
         underline="hover"
         color="primary"
-        sx={{ fontWeight: 600, textAlign: 'left' }}
+        sx={(theme) => ({
+          fontWeight: theme.typography.fontWeightSemiBold,
+          textAlign: 'left',
+        })}
       >
         {children}
       </Link>
@@ -32,7 +35,10 @@ export function NameLink({ children, to, onClick }: NameLinkProps) {
       underline="hover"
       color="primary"
       onClick={onClick}
-      sx={{ fontWeight: 600, textAlign: 'left' }}
+      sx={(theme) => ({
+        fontWeight: theme.typography.fontWeightSemiBold,
+        textAlign: 'left',
+      })}
     >
       {children}
     </Link>

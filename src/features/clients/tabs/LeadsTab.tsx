@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import { DataTable } from '@/components/common/DataTable';
 import type { DataTableColumn } from '@/components/common/DataTable';
 import { StatusChip } from '@/components/common/StatusChip';
-import { NameLink } from '../components/NameLink';
+import { NameLink } from '@/components/common/NameLink';
 import { LEADS } from '../data';
 import type { LeadRow } from '../types';
 import { leadDetailPath } from '@/config/routes';

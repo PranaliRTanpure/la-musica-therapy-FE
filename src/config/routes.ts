@@ -13,6 +13,13 @@ export const ROUTES = {
   SCHEDULING: '/scheduling',
   COMMUNICATION: '/communication',
   SETTINGS: '/settings',
+  SETTINGS_AVAILABILITY: '/settings/availability',
+  /** A single provider's availability; `:id` = provider id. */
+  SETTINGS_AVAILABILITY_DETAIL: '/settings/availability/:id',
+  SETTINGS_HOLIDAYS: '/settings/holidays',
+  SETTINGS_ROLES: '/settings/roles-and-permissions',
+  SETTINGS_INSURERS: '/settings/insurers',
+  SETTINGS_PROCEDURAL_CODES: '/settings/procedural-codes',
 } as const;
 
 export type RoutePath = (typeof ROUTES)[keyof typeof ROUTES];
@@ -22,3 +29,7 @@ export const leadDetailPath = (id: string) => `/clients/leads/${id}`;
 
 /** Build the concrete path to a patient's chart for `PATIENT_CHART`. */
 export const patientChartPath = (id: string) => `/clients/patients/${id}`;
+
+/** Build the concrete path for `SETTINGS_AVAILABILITY_DETAIL`. */
+export const availabilityDetailPath = (id: string) =>
+  `/settings/availability/${id}`;

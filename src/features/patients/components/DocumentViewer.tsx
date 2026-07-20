@@ -1,13 +1,12 @@
+import { ViewerPanel } from '@/components/common/ViewerPanel';
+import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
+import PrintOutlinedIcon from '@mui/icons-material/PrintOutlined';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import PrintOutlinedIcon from '@mui/icons-material/PrintOutlined';
-import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
-import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 import type { SxProps, Theme } from '@mui/material/styles';
-import { ViewerPanel } from '@/components/common/ViewerPanel';
+import Typography from '@mui/material/Typography';
 import type { PatientDocument } from '../types';
 
 export interface DocumentViewerProps {
@@ -34,9 +33,6 @@ export function DocumentViewer({
           </Button>
           <Button variant="outlined" startIcon={<FileDownloadOutlinedIcon />}>
             Download
-          </Button>
-          <Button variant="outlined" startIcon={<ShareOutlinedIcon />}>
-            Share With Patient
           </Button>
         </>
       }
