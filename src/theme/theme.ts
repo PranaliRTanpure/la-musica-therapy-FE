@@ -20,6 +20,19 @@ declare module '@mui/material/styles' {
   }
 }
 
+// The design's "semibold" weight (between MUI's medium 500 and bold 700), used
+// for field labels, section titles, etc. Reference via
+// `theme.typography.fontWeightSemiBold` instead of hardcoding 600.
+//
+// `FontStyle` is declared in `createTypography`, so it must be augmented there:
+// augmenting the `@mui/material/styles` re-export declares a *separate*
+// interface that `theme.typography` never picks up.
+declare module '@mui/material/styles/createTypography' {
+  interface FontStyle {
+    fontWeightSemiBold: number;
+  }
+}
+
 /**
  * ============================================================================
  * SINGLE SOURCE OF TRUTH for all design tokens.
@@ -39,9 +52,9 @@ declare module '@mui/material/styles' {
 // --- 1. PALETTE (replace hex values with the design's actual colors) ---
 const palette = {
   primary: {
-    main: '#2563EB', // TODO: replace with design's primary
-    light: '#60A5FA',
-    dark: '#1E40AF',
+    main: '#357cf7', // --color-primary  (--brand-7)
+    dark: '#2c6bdb', // --color-primary-hover (--brand-8)
+    light: '#8db9ff', // --color-primary-subtle (--brand-4)
     contrastText: '#FFFFFF',
   },
   secondary: {
@@ -87,6 +100,7 @@ const typography = {
     'Roboto',
     'sans-serif',
   ].join(','),
+  fontWeightSemiBold: 600,
   h1: { fontSize: '2.5rem', fontWeight: 700, lineHeight: 1.2 },
   h2: { fontSize: '2rem', fontWeight: 700, lineHeight: 1.25 },
   h3: { fontSize: '1.5rem', fontWeight: 600, lineHeight: 1.3 },
@@ -130,6 +144,45 @@ export const theme = createTheme({
       defaultProps: { elevation: 0 },
       styleOverrides: {
         root: { border: `1px solid ${palette.divider}` },
+      },
+    },
+    // --- Shared table styling (single source of truth for ALL tables) ---
+    // Every table rendered via the common DataTable inherits this look, so the
+    // Leads / Prospects / Waiting List / Clients tables stay identical.
+    MuiTableContainer: {
+      styleOverrides: {
+        root: { borderRadius: shape.borderRadius },
+      },
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          borderColor: palette.divider,
+          whiteSpace: 'nowrap',
+          fontSize: typography.body2.fontSize,
+          // Tighter vertical padding than MUI's default so table rows are more
+          // compact; horizontal padding stays at the default 16px so columns
+          // keep breathing room. (Row height floors ~43px on the checkbox/
+          // action controls, so 4px is near the practical minimum.)
+          paddingTop: 4,
+          paddingBottom: 4,
+        },
+        head: {
+          backgroundColor: palette.background.default,
+          color: palette.text.secondary,
+          fontWeight: 600,
+        },
+        body: {
+          color: palette.text.primary,
+        },
+      },
+    },
+    MuiTableRow: {
+      styleOverrides: {
+        // Slightly softer hover than MUI's default for long, dense rows.
+        hover: {
+          '&:hover': { backgroundColor: palette.background.default },
+        },
       },
     },
   },

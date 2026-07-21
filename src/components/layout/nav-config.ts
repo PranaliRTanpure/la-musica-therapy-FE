@@ -1,9 +1,9 @@
 import type { SvgIconComponent } from '@mui/icons-material';
-import GridViewRounded from '@mui/icons-material/GridViewRounded';
-import PeopleAltRounded from '@mui/icons-material/PeopleAltRounded';
-import CalendarMonthRounded from '@mui/icons-material/CalendarMonthRounded';
-import ChatRounded from '@mui/icons-material/ChatRounded';
-import SettingsRounded from '@mui/icons-material/SettingsRounded';
+import GridViewOutlined from '@mui/icons-material/GridViewOutlined';
+import PeopleAltOutlined from '@mui/icons-material/PeopleAltOutlined';
+import CalendarMonthOutlined from '@mui/icons-material/CalendarMonthOutlined';
+import ChatOutlined from '@mui/icons-material/ChatOutlined';
+import SettingsOutlined from '@mui/icons-material/SettingsOutlined';
 import { ROUTES } from '@/config/routes';
 
 export interface NavItem {
@@ -20,9 +20,9 @@ export interface NavItem {
  * ships `@mui/icons-material` rather than `@phosphor-icons/react`.
  */
 export const NAV_ITEMS: NavItem[] = [
-  { label: 'Dashboard', to: ROUTES.DASHBOARD, icon: GridViewRounded },
-  { label: 'Clients', to: ROUTES.CLIENTS, icon: PeopleAltRounded },
-  { label: 'Scheduling', to: ROUTES.SCHEDULING, icon: CalendarMonthRounded },
-  { label: 'Communication', to: ROUTES.COMMUNICATION, icon: ChatRounded },
-  { label: 'Settings', to: ROUTES.SETTINGS, icon: SettingsRounded },
+  { label: 'Dashboard', to: ROUTES.DASHBOARD, icon: GridViewOutlined },
+  { label: 'Clients', to: ROUTES.CLIENTS, icon: PeopleAltOutlined },
+  { label: 'Scheduling', to: ROUTES.SCHEDULING, icon: CalendarMonthOutlined },
+  { label: 'Communication', to: ROUTES.COMMUNICATION, icon: ChatOutlined },
+  { label: 'Settings', to: ROUTES.SETTINGS, icon: SettingsOutlined },
 ];
