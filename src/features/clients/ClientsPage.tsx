@@ -2,15 +2,15 @@ import { useState } from 'react';
 import type { ReactNode } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import AddIcon from '@mui/icons-material/Add';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import SearchIcon from '@mui/icons-material/Search';
+import { AppButton } from '@/components/common/AppButton';
+import { AppTextField } from '@/components/common/AppTextField';
 import { AppTabs } from '@/components/common/AppTabs';
 import { TablePaginationBar } from '@/components/common/TablePaginationBar';
 import { FilterMenu } from '@/components/common/FilterMenu';
@@ -62,7 +62,7 @@ const TAB_CONFIG: TabConfig[] = [
     pageCount: pages(LEADS.length),
     filterGroups: LEADS_FILTERS,
     action: (
-      <Button
+      <AppButton
         component={RouterLink}
         to={ROUTES.LEADS_NEW}
         variant="contained"
@@ -70,7 +70,7 @@ const TAB_CONFIG: TabConfig[] = [
         sx={{ whiteSpace: 'nowrap' }}
       >
         Add Leads
-      </Button>
+      </AppButton>
     ),
   },
   {
@@ -148,16 +148,10 @@ export function ClientsPage() {
           spacing={1.5}
           sx={{ flexShrink: 0 }}
         >
-          <TextField
+          <AppTextField
             placeholder="Search by..."
             size="small"
-            sx={(theme) => ({
-              width: '100%',
-              maxWidth: { sm: 260 },
-              '& .MuiInputBase-input': {
-                fontSize: theme.typography.body1.fontSize,
-              },
-            })}
+            sx={{ width: '100%', maxWidth: { sm: 260 } }}
             slotProps={{
               input: {
                 startAdornment: (
