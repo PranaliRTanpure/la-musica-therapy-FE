@@ -12,7 +12,7 @@ import { FormOtpInput } from '@/components/form/FormOtpInput';
 import { AuthSplitLayout } from '@/components/layout/AuthSplitLayout';
 import { layout } from '@/theme/theme';
 import { ROUTES } from '@/config/routes';
-import logo from '@/assets/logo-black.webp';
+import logo from '@/assets/tfv-logo-black-white.png';
 import {
   verifyCodeSchema,
   OTP_LENGTH,
