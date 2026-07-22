@@ -8,6 +8,7 @@ export const ROUTES = {
   PROVIDER_LOGIN: '/provider/login',
   FORGOT_PASSWORD: '/forgot-password',
   VERIFY_CODE: '/verify-code',
+  SET_NEW_PASSWORD: '/set-new-password',
   DASHBOARD: '/dashboard',
   CLIENTS: '/clients',
   LEADS_NEW: '/clients/leads/new',

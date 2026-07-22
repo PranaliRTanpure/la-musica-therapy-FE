@@ -11,6 +11,7 @@ import { HolidaysPage } from '@/features/holidays/HolidaysPage';
 import { LoginPage } from '@/pages/LoginPage';
 import { ForgotPasswordPage } from '@/pages/ForgotPasswordPage';
 import { VerifyCodePage } from '@/pages/VerifyCodePage';
+import { SetNewPasswordPage } from '@/pages/SetNewPasswordPage';
 import { ROUTES } from '@/config/routes';
 
 export const router = createBrowserRouter([
@@ -27,6 +28,10 @@ export const router = createBrowserRouter([
   {
     path: ROUTES.VERIFY_CODE,
     element: <VerifyCodePage />,
+  },
+  {
+    path: ROUTES.SET_NEW_PASSWORD,
+    element: <SetNewPasswordPage />,
   },
   {
     path: '/',

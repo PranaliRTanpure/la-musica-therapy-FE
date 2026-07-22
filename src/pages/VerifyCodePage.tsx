@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
-import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { AppButton } from '@/components/common/AppButton';
 import { FormOtpInput } from '@/components/form/FormOtpInput';
@@ -24,6 +24,7 @@ export interface VerifyCodeLocationState {
 }
 
 export function VerifyCodePage() {
+  const navigate = useNavigate();
   const location = useLocation();
   const email = (location.state as VerifyCodeLocationState | null)?.email;
 
@@ -39,6 +40,8 @@ export function VerifyCodePage() {
 
   const onSubmit = handleSubmit(() => {
     // Static screen: no API integration yet, per CLAUDE.md current-phase note.
+    const state: VerifyCodeLocationState = { email };
+    navigate(ROUTES.SET_NEW_PASSWORD, { state });
   });
 
   const handleResendCode = () => {
