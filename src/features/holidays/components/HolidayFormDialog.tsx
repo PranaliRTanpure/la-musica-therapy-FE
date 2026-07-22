@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -12,6 +11,7 @@ import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import CloseIcon from '@mui/icons-material/Close';
 import { useTheme } from '@mui/material/styles';
+import { AppButton } from '@/components/common/AppButton';
 import { FormTextField } from '@/components/form/FormTextField';
 import { emptyHoliday, holidaySchema } from '../schema';
 import type { HolidayFormValues } from '../schema';
@@ -146,16 +146,20 @@ export function HolidayFormDialog({
         </DialogContent>
 
         <DialogActions sx={{ p: 2, gap: 1.5, flexWrap: 'wrap' }}>
-          <Button variant="outlined" onClick={onClose} disabled={isSubmitting}>
+          <AppButton
+            variant="outlined"
+            onClick={onClose}
+            disabled={isSubmitting}
+          >
             Cancel
-          </Button>
-          <Button
+          </AppButton>
+          <AppButton
             type="submit"
             variant="contained"
             disabled={!isValid || isSubmitting}
           >
             Save
-          </Button>
+          </AppButton>
         </DialogActions>
       </form>
     </Dialog>

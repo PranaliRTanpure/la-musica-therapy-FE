@@ -1,19 +1,19 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import InputAdornment from '@mui/material/InputAdornment';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import SearchIcon from '@mui/icons-material/Search';
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
+import { AppButton } from '@/components/common/AppButton';
 import { AppTabs } from '@/components/common/AppTabs';
+import { AppTextField } from '@/components/common/AppTextField';
 import { UploadFileModal } from '@/components/common/UploadFileModal';
 import { PatientHeader } from './components/PatientHeader';
 import { ChartSideNav } from './components/ChartSideNav';
@@ -179,16 +179,13 @@ export function PatientChartingPage() {
                     spacing={1.5}
                     alignItems={{ sm: 'center' }}
                   >
-                    <TextField
+                    <AppTextField
                       placeholder="Search..."
                       size="small"
-                      sx={(theme) => ({
+                      sx={{
                         maxWidth: { sm: 260 },
                         bgcolor: 'background.paper',
-                        '& .MuiInputBase-input': {
-                          fontSize: theme.typography.body1.fontSize,
-                        },
-                      })}
+                      }}
                       slotProps={{
                         htmlInput: {
                           'aria-label': isDocumentsTab
@@ -206,14 +203,14 @@ export function PatientChartingPage() {
                     />
                     {/* Forms are sent to the patient, not uploaded here. */}
                     {isDocumentsTab ? (
-                      <Button
+                      <AppButton
                         variant="contained"
                         startIcon={<FileUploadOutlinedIcon />}
                         onClick={() => setUploadOpen(true)}
                         sx={{ flexShrink: 0 }}
                       >
                         Upload
-                      </Button>
+                      </AppButton>
                     ) : null}
                   </Stack>
                 </Stack>

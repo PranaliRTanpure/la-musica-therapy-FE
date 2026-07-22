@@ -1,7 +1,7 @@
-import Button from '@mui/material/Button';
 import PrintOutlinedIcon from '@mui/icons-material/PrintOutlined';
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import type { SxProps, Theme } from '@mui/material/styles';
+import { AppButton } from '@/components/common/AppButton';
 import { ViewerPanel } from '@/components/common/ViewerPanel';
 import { FormDetail } from './FormDetail';
 import type { PatientChart, PatientForm } from '../types';
@@ -20,12 +20,15 @@ export function FormViewer({ form, patient, sx }: FormViewerProps) {
       sx={sx}
       actions={
         <>
-          <Button variant="outlined" startIcon={<PrintOutlinedIcon />}>
+          <AppButton variant="outlined" startIcon={<PrintOutlinedIcon />}>
             Print
-          </Button>
-          <Button variant="outlined" startIcon={<FileDownloadOutlinedIcon />}>
+          </AppButton>
+          <AppButton
+            variant="outlined"
+            startIcon={<FileDownloadOutlinedIcon />}
+          >
             Download
-          </Button>
+          </AppButton>
         </>
       }
     >

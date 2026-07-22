@@ -1,10 +1,10 @@
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { AppButton } from '@/components/common/AppButton';
 import { StatusChip } from '@/components/common/StatusChip';
 import type { PatientChart } from '../types';
 
@@ -85,12 +85,12 @@ export function PatientHeader({ patient, onBack }: PatientHeaderProps) {
           </Stack>
         </Box>
       </Stack>
-      <Button
+      <AppButton
         variant="outlined"
         sx={{ flexShrink: 0, alignSelf: { xs: 'stretch', md: 'center' } }}
       >
         Edit
-      </Button>
+      </AppButton>
     </Stack>
   );
 }

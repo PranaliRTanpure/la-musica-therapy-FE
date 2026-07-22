@@ -1,8 +1,8 @@
+import { AppButton } from '@/components/common/AppButton';
 import { ViewerPanel } from '@/components/common/ViewerPanel';
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import PrintOutlinedIcon from '@mui/icons-material/PrintOutlined';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import type { SxProps, Theme } from '@mui/material/styles';
@@ -28,12 +28,15 @@ export function DocumentViewer({
       sx={sx}
       actions={
         <>
-          <Button variant="outlined" startIcon={<PrintOutlinedIcon />}>
+          <AppButton variant="outlined" startIcon={<PrintOutlinedIcon />}>
             Print
-          </Button>
-          <Button variant="outlined" startIcon={<FileDownloadOutlinedIcon />}>
+          </AppButton>
+          <AppButton
+            variant="outlined"
+            startIcon={<FileDownloadOutlinedIcon />}
+          >
             Download
-          </Button>
+          </AppButton>
         </>
       }
     >

@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { AppButton } from '@/components/common/AppButton';
 import { ROUTES } from '@/config/routes';
 import { AddLeadForm } from './AddLeadForm';
 import type { AddLeadFormValues } from './schema';
@@ -72,12 +72,15 @@ export function AddLeadPage() {
             label="Show mandatory fields only"
             slotProps={{ typography: { variant: 'body2' } }}
           />
-          <Button variant="outlined" onClick={() => navigate(ROUTES.CLIENTS)}>
+          <AppButton
+            variant="outlined"
+            onClick={() => navigate(ROUTES.CLIENTS)}
+          >
             Cancel
-          </Button>
-          <Button type="submit" form={FORM_ID} variant="contained">
+          </AppButton>
+          <AppButton type="submit" form={FORM_ID} variant="contained">
             {isEdit ? 'Update' : 'Save and Share Link'}
-          </Button>
+          </AppButton>
         </Stack>
       </Stack>
 

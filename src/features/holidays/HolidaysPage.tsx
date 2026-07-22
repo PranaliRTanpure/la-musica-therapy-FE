@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { AppButton } from '@/components/common/AppButton';
 import { DataTable } from '@/components/common/DataTable';
 import type { DataTableColumn } from '@/components/common/DataTable';
 import { formatShortDate } from '@/utils/date';
@@ -91,14 +91,14 @@ export function HolidaysPage() {
           </Typography>
         </Stack>
 
-        <Button
+        <AppButton
           variant="contained"
           startIcon={<AddIcon />}
           onClick={openAdd}
           sx={{ flexShrink: 0 }}
         >
           Add Holidays
-        </Button>
+        </AppButton>
       </Stack>
 
       <DataTable

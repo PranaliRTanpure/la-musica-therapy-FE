@@ -3,6 +3,12 @@
  * strings so nav config, the router, and links stay in sync.
  */
 export const ROUTES = {
+  LOGIN: '/login',
+  PATIENT_LOGIN: '/patient/login',
+  PROVIDER_LOGIN: '/provider/login',
+  FORGOT_PASSWORD: '/forgot-password',
+  VERIFY_CODE: '/verify-code',
+  SET_NEW_PASSWORD: '/set-new-password',
   DASHBOARD: '/dashboard',
   CLIENTS: '/clients',
   LEADS_NEW: '/clients/leads/new',
