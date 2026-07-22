@@ -3,7 +3,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Collapse from '@mui/material/Collapse';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
@@ -13,6 +12,7 @@ import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { AppButton } from '@/components/common/AppButton';
 import { AppTabs } from '@/components/common/AppTabs';
 import { StatusChip } from '@/components/common/StatusChip';
 import { DayRow } from './components/DayRow';
@@ -100,14 +100,14 @@ export function AvailabilityPreferencesPage() {
           />
         </Stack>
 
-        <Button
+        <AppButton
           type="submit"
           variant="contained"
           disabled={formState.isSubmitting}
           sx={{ flexShrink: 0, alignSelf: { xs: 'stretch', lg: 'center' } }}
         >
           Save Changes
-        </Button>
+        </AppButton>
       </Stack>
 
       {tab === TAB_DAY_SLOTS ? (

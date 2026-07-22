@@ -8,14 +8,16 @@ import { SettingsPage } from '@/features/settings/SettingsPage';
 import { AvailabilityPage } from '@/features/availability/AvailabilityPage';
 import { AvailabilityPreferencesPage } from '@/features/availability/AvailabilityPreferencesPage';
 import { HolidaysPage } from '@/features/holidays/HolidaysPage';
+import { LoginPage } from '@/pages/LoginPage';
 import { ROUTES } from '@/config/routes';
 
 export const router = createBrowserRouter([
+  { path: ROUTES.LOGIN, element: <LoginPage /> },
   {
     path: '/',
     element: <AppLayout />,
     children: [
-      { index: true, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
+      { index: true, element: <Navigate to={ROUTES.LOGIN} replace /> },
       {
         path: ROUTES.DASHBOARD,
         element: <PlaceholderPage title="Dashboard" />,

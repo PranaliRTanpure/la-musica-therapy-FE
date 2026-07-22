@@ -1,3 +1,4 @@
+import type * as React from 'react';
 import { createTheme } from '@mui/material/styles';
 
 /**
@@ -14,9 +15,17 @@ declare module '@mui/material/styles' {
       itemActiveBg: string;
       itemActiveText: string;
     };
+    border: {
+      hover: string;
+    };
+    placeholder: {
+      main: string;
+    };
   }
   interface PaletteOptions {
     nav?: Palette['nav'];
+    border?: Palette['border'];
+    placeholder?: Palette['placeholder'];
   }
 }
 
@@ -30,6 +39,27 @@ declare module '@mui/material/styles' {
 declare module '@mui/material/styles/createTypography' {
   interface FontStyle {
     fontWeightSemiBold: number;
+  }
+  interface TypographyVariants {
+    authPageTitle: React.CSSProperties;
+    bodyMedium: React.CSSProperties;
+    authPageSubtitle: React.CSSProperties;
+    captchaChar: React.CSSProperties;
+  }
+  interface TypographyVariantsOptions {
+    authPageTitle?: React.CSSProperties;
+    bodyMedium?: React.CSSProperties;
+    authPageSubtitle?: React.CSSProperties;
+    captchaChar?: React.CSSProperties;
+  }
+}
+
+declare module '@mui/material/Typography' {
+  interface TypographyPropsVariantOverrides {
+    authPageTitle: true;
+    bodyMedium: true;
+    authPageSubtitle: true;
+    captchaChar: true;
   }
 }
 
@@ -71,6 +101,15 @@ const palette = {
     default: '#F9FAFB', // page background
     paper: '#FFFFFF', // cards, surfaces
   },
+  action: {
+    hover: '#F3F3F8', // input hover background
+  },
+  border: {
+    hover: '#D1D1D6', // input border color on hover
+  },
+  placeholder: {
+    main: '#A1A1A6', // input placeholder text color
+  },
   text: {
     primary: '#111827',
     secondary: '#6B7280',
@@ -109,12 +148,21 @@ const typography = {
   h6: { fontSize: '1rem', fontWeight: 600, lineHeight: 1.4 },
   body1: { fontSize: '1rem', lineHeight: 1.5 },
   body2: { fontSize: '0.875rem', lineHeight: 1.5 },
+  authPageTitle: { fontSize: '1.625rem', fontWeight: 600, lineHeight: 1.3 },
+  bodyMedium: { fontSize: '0.875rem', fontWeight: 500, lineHeight: 1.5 },
+  authPageSubtitle: { fontSize: '0.875rem', fontWeight: 400, lineHeight: 1.5 },
+  captchaChar: { fontSize: '1.375rem', fontWeight: 700, lineHeight: 1.3 },
   button: { textTransform: 'none' as const, fontWeight: 600 }, // MUI uppercases by default; usually you don't want that
 };
 
 // --- 3. SHAPE (border radius) ---
 const shape = {
   borderRadius: 8, // TODO: match design's default radius
+};
+
+// Reusable content-width constants for form/card layouts (px).
+export const layout = {
+  authFormMaxWidth: 420,
 };
 
 /**
@@ -139,6 +187,56 @@ export const theme = createTheme({
     },
     MuiTextField: {
       defaultProps: { variant: 'outlined', size: 'small', fullWidth: true },
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        input: {
+          // Must stay >= 16px: iOS Safari auto-zooms the viewport on focus
+          // for any input with a smaller font-size.
+          fontSize: '1rem', // 16px
+          '&::placeholder': {
+            fontSize: '0.875rem', // 14px (never focusable itself, safe below 16px)
+            color: palette.placeholder.main,
+            opacity: 1,
+          },
+        },
+      },
+    },
+    // Focused state across all inputs uses the lighter brand blue
+    // (--brand-4) rather than the darker primary.main.
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          '&:hover:not(.Mui-focused):not(.Mui-disabled)': {
+            backgroundColor: palette.action.hover,
+            '& .MuiOutlinedInput-notchedOutline': {
+              borderColor: palette.border.hover,
+            },
+          },
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: palette.primary.light,
+          },
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          '&.Mui-focused': { color: palette.primary.light },
+        },
+      },
+    },
+    // Default focus-visible ring (buttons, checkboxes, tabs, etc.) uses the
+    // same lighter brand blue instead of the browser default / primary.main.
+    MuiButtonBase: {
+      styleOverrides: {
+        root: {
+          '&.Mui-focusVisible': {
+            outline: `2px solid ${palette.primary.light}`,
+            outlineOffset: 2,
+          },
+        },
+      },
     },
     MuiPaper: {
       defaultProps: { elevation: 0 },

@@ -4,11 +4,11 @@ import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SearchIcon from '@mui/icons-material/Search';
 import { AppSelect } from '@/components/common/AppSelect';
+import { AppTextField } from '@/components/common/AppTextField';
 import { DataTable } from '@/components/common/DataTable';
 import type { DataTableColumn } from '@/components/common/DataTable';
 import { NameLink } from '@/components/common/NameLink';
@@ -89,17 +89,13 @@ export function AvailabilityPage() {
           spacing={1.5}
           alignItems={{ sm: 'center' }}
         >
-          <TextField
+          <AppTextField
             placeholder="Search..."
             size="small"
-            sx={(theme) => ({
+            sx={{
               width: { xs: '100%', sm: '15rem' },
               bgcolor: 'background.paper',
-              // >= 16px keeps iOS Safari from zooming on focus.
-              '& .MuiInputBase-input': {
-                fontSize: theme.typography.body1.fontSize,
-              },
-            })}
+            }}
             slotProps={{
               htmlInput: { 'aria-label': 'Search providers' },
               input: {
