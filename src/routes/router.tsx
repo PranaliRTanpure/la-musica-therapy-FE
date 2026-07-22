@@ -9,10 +9,25 @@ import { AvailabilityPage } from '@/features/availability/AvailabilityPage';
 import { AvailabilityPreferencesPage } from '@/features/availability/AvailabilityPreferencesPage';
 import { HolidaysPage } from '@/features/holidays/HolidaysPage';
 import { LoginPage } from '@/pages/LoginPage';
+import { ForgotPasswordPage } from '@/pages/ForgotPasswordPage';
+import { VerifyCodePage } from '@/pages/VerifyCodePage';
 import { ROUTES } from '@/config/routes';
 
 export const router = createBrowserRouter([
-  { path: ROUTES.LOGIN, element: <LoginPage /> },
+  {
+    path: ROUTES.LOGIN,
+    element: <Navigate to={ROUTES.PATIENT_LOGIN} replace />,
+  },
+  { path: ROUTES.PATIENT_LOGIN, element: <LoginPage variant="patient" /> },
+  { path: ROUTES.PROVIDER_LOGIN, element: <LoginPage variant="provider" /> },
+  {
+    path: ROUTES.FORGOT_PASSWORD,
+    element: <ForgotPasswordPage />,
+  },
+  {
+    path: ROUTES.VERIFY_CODE,
+    element: <VerifyCodePage />,
+  },
   {
     path: '/',
     element: <AppLayout />,

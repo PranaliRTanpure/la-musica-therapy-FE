@@ -4,6 +4,10 @@
  */
 export const ROUTES = {
   LOGIN: '/login',
+  PATIENT_LOGIN: '/patient/login',
+  PROVIDER_LOGIN: '/provider/login',
+  FORGOT_PASSWORD: '/forgot-password',
+  VERIFY_CODE: '/verify-code',
   DASHBOARD: '/dashboard',
   CLIENTS: '/clients',
   LEADS_NEW: '/clients/leads/new',

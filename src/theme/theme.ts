@@ -45,12 +45,20 @@ declare module '@mui/material/styles/createTypography' {
     bodyMedium: React.CSSProperties;
     authPageSubtitle: React.CSSProperties;
     captchaChar: React.CSSProperties;
+    otpDigit: React.CSSProperties;
   }
   interface TypographyVariantsOptions {
     authPageTitle?: React.CSSProperties;
     bodyMedium?: React.CSSProperties;
     authPageSubtitle?: React.CSSProperties;
     captchaChar?: React.CSSProperties;
+    otpDigit?: React.CSSProperties;
+  }
+  // `theme.typography.otpDigit` (direct property access, not the `variant`
+  // prop) is typed via `Typography`, a distinct interface from
+  // `TypographyVariants` above — both must be augmented.
+  interface Typography {
+    otpDigit: React.CSSProperties;
   }
 }
 
@@ -60,6 +68,7 @@ declare module '@mui/material/Typography' {
     bodyMedium: true;
     authPageSubtitle: true;
     captchaChar: true;
+    otpDigit: true;
   }
 }
 
@@ -152,6 +161,7 @@ const typography = {
   bodyMedium: { fontSize: '0.875rem', fontWeight: 500, lineHeight: 1.5 },
   authPageSubtitle: { fontSize: '0.875rem', fontWeight: 400, lineHeight: 1.5 },
   captchaChar: { fontSize: '1.375rem', fontWeight: 700, lineHeight: 1.3 },
+  otpDigit: { fontSize: '1.25rem', fontWeight: 600, lineHeight: 1.3 },
   button: { textTransform: 'none' as const, fontWeight: 600 }, // MUI uppercases by default; usually you don't want that
 };
 
@@ -183,6 +193,12 @@ export const theme = createTheme({
       defaultProps: { disableElevation: true },
       styleOverrides: {
         root: { borderRadius: 8 },
+        containedPrimary: {
+          '&.Mui-disabled': {
+            backgroundColor: palette.primary.light,
+            color: palette.primary.contrastText,
+          },
+        },
       },
     },
     MuiTextField: {
