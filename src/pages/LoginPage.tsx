@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { AppButton } from '@/components/common/AppButton';
 import { CaptchaDisplay } from '@/components/common/CaptchaDisplay';
 import { FormCheckbox } from '@/components/form/FormCheckbox';
@@ -44,6 +44,7 @@ const COPY = {
 
 export function LoginPage({ variant }: LoginPageProps) {
   const isPatient = variant === 'patient';
+  const navigate = useNavigate();
   const [captchaCode, setCaptchaCode] = useState(generateCaptchaCode);
 
   const { control, handleSubmit, formState, setValue, setError } =
@@ -70,7 +71,9 @@ export function LoginPage({ variant }: LoginPageProps) {
       refreshCaptcha();
       return;
     }
-    // Static screen: no API integration yet, per CLAUDE.md current-phase note.
+    // Both patient and provider variants land on the Clients route for now
+    // (static screen, no API integration yet, per CLAUDE.md current-phase note).
+    navigate(ROUTES.CLIENTS);
   });
 
   const { title, subtitle } = COPY[variant];
