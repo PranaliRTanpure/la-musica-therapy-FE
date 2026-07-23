@@ -18,11 +18,8 @@ export function FieldLabel({ label, required, htmlFor }: FieldLabelProps) {
     <Typography
       component="label"
       htmlFor={htmlFor}
-      variant="body2"
-      sx={(theme) => ({
-        fontWeight: theme.typography.fontWeightSemiBold,
-        color: 'text.primary',
-      })}
+      variant="bodyMedium"
+      sx={{ color: 'text.primary' }}
     >
       {label}
       {required ? (

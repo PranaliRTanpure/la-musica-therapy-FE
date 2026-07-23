@@ -4,32 +4,34 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { AppButton } from '@/components/common/AppButton';
-import { FormTextField } from '@/components/form/FormTextField';
+import { FormPasswordField } from '@/components/form/FormPasswordField';
 import { AuthSplitLayout } from '@/components/layout/AuthSplitLayout';
 import { layout } from '@/theme/theme';
 import { ROUTES } from '@/config/routes';
 import logo from '@/assets/tfv-logo-black-white.png';
 import {
-  forgotPasswordSchema,
-  type ForgotPasswordFormValues,
-} from './forgotPasswordSchema';
+  setNewPasswordSchema,
+  type SetNewPasswordFormValues,
+} from './setNewPasswordSchema';
 import type { VerifyCodeLocationState } from './VerifyCodePage';
 
-export function ForgotPasswordPage() {
+export function SetNewPasswordPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const email = (location.state as VerifyCodeLocationState | null)?.email;
+
   const { control, handleSubmit, formState } =
-    useForm<ForgotPasswordFormValues>({
-      resolver: zodResolver(forgotPasswordSchema),
-      defaultValues: { email: '' },
+    useForm<SetNewPasswordFormValues>({
+      resolver: zodResolver(setNewPasswordSchema),
+      defaultValues: { newPassword: '', confirmPassword: '' },
     });
 
-  const onSubmit = handleSubmit((values) => {
+  const onSubmit = handleSubmit(() => {
     // Static screen: no API integration yet, per CLAUDE.md current-phase note.
-    const state: VerifyCodeLocationState = { email: values.email };
-    navigate(ROUTES.VERIFY_CODE, { state });
+    navigate(ROUTES.PROVIDER_LOGIN);
   });
 
   return (
@@ -51,27 +53,34 @@ export function ForgotPasswordPage() {
 
         <Box sx={{ textAlign: { xs: 'center', md: 'left' } }}>
           <Typography variant="authPageTitle" component="h1">
-            Forgot your password?
+            Set a new password
           </Typography>
           <Typography
             variant="authPageSubtitle"
             color="text.secondary"
             sx={{ mt: 1 }}
           >
-            Enter the email for your account and we&apos;ll send a verification
-            code to reset your password.
+            Create a new password to secure your account and continue.
           </Typography>
         </Box>
 
         <Stack spacing={2.5} sx={{ mt: 1 }}>
-          <FormTextField<ForgotPasswordFormValues>
-            name="email"
+          <FormPasswordField<SetNewPasswordFormValues>
+            name="newPassword"
             control={control}
-            label="Email"
+            label="New Password"
             required
-            placeholder="name@lamusicatherapy.com"
-            type="email"
-            autoComplete="email"
+            placeholder="Create a new password"
+            autoComplete="new-password"
+          />
+
+          <FormPasswordField<SetNewPasswordFormValues>
+            name="confirmPassword"
+            control={control}
+            label="Confirm Password"
+            required
+            placeholder="Re-enter your new password"
+            autoComplete="new-password"
           />
         </Stack>
 
@@ -82,12 +91,13 @@ export function ForgotPasswordPage() {
           fullWidth
           loading={formState.isSubmitting}
         >
-          Send reset code
+          Reset password
         </AppButton>
 
         <Link
           component={RouterLink}
-          to={ROUTES.PROVIDER_LOGIN}
+          to={ROUTES.VERIFY_CODE}
+          state={{ email } satisfies VerifyCodeLocationState}
           variant="body2"
           underline="hover"
           sx={{
@@ -98,7 +108,7 @@ export function ForgotPasswordPage() {
           }}
         >
           <ArrowBackIcon fontSize="small" />
-          Back to sign in
+          Back
         </Link>
       </Stack>
     </AuthSplitLayout>

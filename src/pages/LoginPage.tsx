@@ -8,13 +8,14 @@ import Link from '@mui/material/Link';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { AppButton } from '@/components/common/AppButton';
 import { CaptchaDisplay } from '@/components/common/CaptchaDisplay';
+import { FieldLabel } from '@/components/common/FieldLabel';
 import { FormCheckbox } from '@/components/form/FormCheckbox';
 import { FormPasswordField } from '@/components/form/FormPasswordField';
 import { FormTextField } from '@/components/form/FormTextField';
 import { AuthSplitLayout } from '@/components/layout/AuthSplitLayout';
 import { layout } from '@/theme/theme';
 import { ROUTES } from '@/config/routes';
-import logo from '@/assets/logo-black.webp';
+import logo from '@/assets/tfv-logo-black-white.png';
 import { loginSchema, type LoginFormValues } from './loginSchema';
 
 const CAPTCHA_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -130,24 +131,7 @@ export function LoginPage({ variant }: LoginPageProps) {
 
           {isPatient && (
             <Stack spacing={0.75}>
-              <Typography
-                component="label"
-                htmlFor="captcha"
-                variant="body2"
-                sx={(theme) => ({
-                  fontWeight: theme.typography.fontWeightSemiBold,
-                  color: 'text.primary',
-                })}
-              >
-                Captcha
-                <Box
-                  component="span"
-                  aria-hidden="true"
-                  sx={{ color: 'error.main', ml: 0.25 }}
-                >
-                  *
-                </Box>
-              </Typography>
+              <FieldLabel label="Captcha" htmlFor="captcha" required />
               <CaptchaDisplay code={captchaCode} onRefresh={refreshCaptcha} />
               <FormTextField<LoginFormValues>
                 name="captcha"
