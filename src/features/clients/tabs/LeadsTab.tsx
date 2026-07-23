@@ -1,10 +1,14 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
+import Snackbar from '@mui/material/Snackbar';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { DataTable } from '@/components/common/DataTable';
 import type { DataTableColumn } from '@/components/common/DataTable';
 import { StatusChip } from '@/components/common/StatusChip';
 import { NameLink } from '@/components/common/NameLink';
+import { LeadActions } from './components/LeadActions';
 import { LEADS } from '../data';
 import type { LeadRow } from '../types';
 import { leadDetailPath } from '@/config/routes';
@@ -52,12 +56,33 @@ interface LeadsTabProps {
 }
 
 export function LeadsTab({ rows = LEADS }: LeadsTabProps) {
+  const navigate = useNavigate();
+  const [resendToastOpen, setResendToastOpen] = useState(false);
+
   return (
-    <DataTable
-      ariaLabel="Leads"
-      columns={columns}
-      rows={rows}
-      getRowId={(r) => r.id}
-    />
+    <>
+      <DataTable
+        ariaLabel="Leads"
+        columns={columns}
+        rows={rows}
+        getRowId={(r) => r.id}
+        renderRowActions={(row) => (
+          <LeadActions
+            leadName={row.name}
+            onView={() => navigate(`${leadDetailPath(row.id)}?mode=view`)}
+            onEdit={() => navigate(leadDetailPath(row.id))}
+            onResendLink={() => setResendToastOpen(true)}
+          />
+        )}
+      />
+
+      <Snackbar
+        open={resendToastOpen}
+        autoHideDuration={3000}
+        onClose={() => setResendToastOpen(false)}
+        message="Link resent"
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      />
+    </>
   );
 }

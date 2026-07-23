@@ -2,12 +2,16 @@ import { forwardRef } from 'react';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import type { TextFieldProps } from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+import SearchIcon from '@mui/icons-material/Search';
 import { FieldLabel } from './FieldLabel';
 
 export interface AppTextFieldProps extends Omit<TextFieldProps, 'label'> {
   /** Label rendered above the field (not MUI's floating label). */
   label?: string;
   required?: boolean;
+  /** Shows a search icon as the start adornment. */
+  showSearchIcon?: boolean;
 }
 
 /**
@@ -17,7 +21,10 @@ export interface AppTextFieldProps extends Omit<TextFieldProps, 'label'> {
  * `ref` is forwarded to the underlying `TextField` for focus management.
  */
 export const AppTextField = forwardRef<HTMLDivElement, AppTextFieldProps>(
-  function AppTextField({ label, required, id, sx, ...rest }, ref) {
+  function AppTextField(
+    { label, required, id, sx, showSearchIcon, slotProps, ...rest },
+    ref
+  ) {
     return (
       <Stack spacing={0.75}>
         {label ? (
@@ -27,6 +34,21 @@ export const AppTextField = forwardRef<HTMLDivElement, AppTextFieldProps>(
           ref={ref}
           id={id}
           required={required}
+          slotProps={
+            showSearchIcon
+              ? {
+                  ...slotProps,
+                  input: {
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon fontSize="small" />
+                      </InputAdornment>
+                    ),
+                    ...slotProps?.input,
+                  },
+                }
+              : slotProps
+          }
           sx={[
             (theme) => ({
               '& .MuiOutlinedInput-root': {

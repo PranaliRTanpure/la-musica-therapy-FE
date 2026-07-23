@@ -34,12 +34,17 @@ const columns: DataTableColumn<WaitingListRow>[] = [
   },
 ];
 
-export function WaitingListTab() {
+interface WaitingListTabProps {
+  /** Rows to display; defaults to the full waiting list. Parent passes the paged slice. */
+  rows?: WaitingListRow[];
+}
+
+export function WaitingListTab({ rows = WAITING_LIST }: WaitingListTabProps) {
   return (
     <DataTable
       ariaLabel="Waiting List"
       columns={columns}
-      rows={WAITING_LIST}
+      rows={rows}
       getRowId={(r) => r.id}
     />
   );

@@ -87,16 +87,15 @@ export function FilterMenu({
         paper: {
           sx: {
             mt: 1,
-            p: 2,
             minWidth: (theme) => theme.spacing(28),
             boxShadow: 3,
           },
         },
       }}
     >
-      <Stack spacing={2}>
+      <Stack divider={<Divider sx={{ borderColor: 'divider' }} />}>
         {groups.map((group) => (
-          <Box key={group.key}>
+          <Box key={group.key} sx={{ px: 2, py: 1.5 }}>
             <Typography
               variant="overline"
               color="text.secondary"
@@ -127,9 +126,14 @@ export function FilterMenu({
         ))}
       </Stack>
 
-      <Divider sx={{ my: 1.5 }} />
+      <Divider sx={{ borderColor: 'divider' }} />
 
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        sx={{ px: 2, py: 1.5 }}
+      >
         <Button
           variant="text"
           onClick={handleClear}

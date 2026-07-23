@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import IconButton from '@mui/material/IconButton';
@@ -27,7 +27,9 @@ const FORM_ID = 'add-lead-form';
 export function AddLeadPage() {
   const navigate = useNavigate();
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
   const isEdit = Boolean(id);
+  const isView = isEdit && searchParams.get('mode') === 'view';
   // Create: default to mandatory-only. Edit: show the full form to review/update.
   const [mandatoryOnly, setMandatoryOnly] = useState(!isEdit);
 
@@ -35,6 +37,12 @@ export function AddLeadPage() {
     // Static phase: no persistence yet. Return to the list on a valid submit.
     navigate(ROUTES.CLIENTS);
   };
+
+  const title = isView
+    ? 'Lead Details'
+    : isEdit
+      ? 'Lead Registration'
+      : 'New Lead Registration';
 
   return (
     <Box sx={{ p: { xs: 2, md: 3 } }}>
@@ -50,8 +58,8 @@ export function AddLeadPage() {
           <IconButton aria-label="Back" onClick={() => navigate(-1)}>
             <ArrowBackIcon />
           </IconButton>
-          <Typography variant="h5" component="h1" sx={{ fontWeight: 700 }}>
-            {isEdit ? 'Lead Registration' : 'New Lead Registration'}
+          <Typography variant="h5" component="h1" sx={{ fontWeight: 600 }}>
+            {title}
           </Typography>
         </Stack>
 
@@ -62,25 +70,36 @@ export function AddLeadPage() {
           flexWrap="wrap"
           useFlexGap
         >
-          <FormControlLabel
-            control={
-              <Switch
-                checked={mandatoryOnly}
-                onChange={(e) => setMandatoryOnly(e.target.checked)}
+          {isView ? (
+            <AppButton
+              variant="contained"
+              onClick={() => navigate(ROUTES.CLIENTS)}
+            >
+              Close
+            </AppButton>
+          ) : (
+            <>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={mandatoryOnly}
+                    onChange={(e) => setMandatoryOnly(e.target.checked)}
+                  />
+                }
+                label="Show mandatory fields only"
+                slotProps={{ typography: { variant: 'body2' } }}
               />
-            }
-            label="Show mandatory fields only"
-            slotProps={{ typography: { variant: 'body2' } }}
-          />
-          <AppButton
-            variant="outlined"
-            onClick={() => navigate(ROUTES.CLIENTS)}
-          >
-            Cancel
-          </AppButton>
-          <AppButton type="submit" form={FORM_ID} variant="contained">
-            {isEdit ? 'Update' : 'Save and Share Link'}
-          </AppButton>
+              <AppButton
+                variant="outlined"
+                onClick={() => navigate(ROUTES.CLIENTS)}
+              >
+                Cancel
+              </AppButton>
+              <AppButton type="submit" form={FORM_ID} variant="contained">
+                {isEdit ? 'Update' : 'Save and Share Link'}
+              </AppButton>
+            </>
+          )}
         </Stack>
       </Stack>
 
@@ -88,6 +107,7 @@ export function AddLeadPage() {
       <AddLeadForm
         formId={FORM_ID}
         mandatoryOnly={mandatoryOnly}
+        readOnly={isView}
         onSubmit={handleSubmit}
       />
     </Box>

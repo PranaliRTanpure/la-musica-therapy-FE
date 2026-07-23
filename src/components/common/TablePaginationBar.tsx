@@ -25,12 +25,15 @@ export interface TablePaginationBarProps {
   pageCount: number;
   /** Called with a valid target page when the user submits "Go to page". */
   onGoToPage?: (page: number) => void;
+  /** Called when the user picks a new page via the page buttons. */
+  onPageChange?: (page: number) => void;
+  /** Called when the user changes rows-per-page. */
+  onRowsPerPageChange?: (rowsPerPage: number) => void;
 }
 
 /**
  * Shared table footer: rows-per-page, range summary, go-to-page, and page
- * buttons. Static (non-wired) for now — props describe what to display; the
- * controls are presentational until real pagination lands.
+ * buttons.
  */
 export function TablePaginationBar({
   rowsPerPage = 10,
@@ -41,6 +44,8 @@ export function TablePaginationBar({
   page = 1,
   pageCount,
   onGoToPage,
+  onPageChange,
+  onRowsPerPageChange,
 }: TablePaginationBarProps) {
   // Local edit buffer so the user can type freely before committing. Kept in
   // sync with the `page` prop so it reflects external page changes (e.g. after
@@ -72,7 +77,8 @@ export function TablePaginationBar({
             Rows per page:
           </Typography>
           <Select
-            defaultValue={rowsPerPage}
+            value={rowsPerPage}
+            onChange={(e) => onRowsPerPageChange?.(Number(e.target.value))}
             size="small"
             sx={{ '& .MuiSelect-select': { py: 0.5 } }}
           >
@@ -126,6 +132,7 @@ export function TablePaginationBar({
         <Pagination
           count={pageCount}
           page={page}
+          onChange={(_e, next) => onPageChange?.(next)}
           color="primary"
           shape="rounded"
           siblingCount={1}

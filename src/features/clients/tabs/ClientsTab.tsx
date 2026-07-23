@@ -10,6 +10,8 @@ const columns: DataTableColumn<ClientRow>[] = [
   {
     id: 'name',
     label: 'Client Name',
+    sticky: 'left',
+    width: 200,
     render: (r) => <NameLink to={patientChartPath(r.id)}>{r.name}</NameLink>,
   },
   { id: 'phone', label: 'Phone Number', render: (r) => r.phone },
@@ -41,12 +43,17 @@ const columns: DataTableColumn<ClientRow>[] = [
   },
 ];
 
-export function ClientsTab() {
+interface ClientsTabProps {
+  /** Rows to display; defaults to all clients. Parent passes the paged slice. */
+  rows?: ClientRow[];
+}
+
+export function ClientsTab({ rows = CLIENTS }: ClientsTabProps) {
   return (
     <DataTable
       ariaLabel="Clients"
       columns={columns}
-      rows={CLIENTS}
+      rows={rows}
       getRowId={(r) => r.id}
     />
   );

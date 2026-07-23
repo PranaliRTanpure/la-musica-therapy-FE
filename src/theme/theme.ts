@@ -21,11 +21,15 @@ declare module '@mui/material/styles' {
     placeholder: {
       main: string;
     };
+    stickyShadow: {
+      color: string;
+    };
   }
   interface PaletteOptions {
     nav?: Palette['nav'];
     border?: Palette['border'];
     placeholder?: Palette['placeholder'];
+    stickyShadow?: Palette['stickyShadow'];
   }
 }
 
@@ -118,6 +122,9 @@ const palette = {
   },
   placeholder: {
     main: '#A1A1A6', // input placeholder text color
+  },
+  stickyShadow: {
+    color: 'rgba(0, 0, 0, 0.15)', // shadow cast by sticky/pinned table columns
   },
   text: {
     primary: '#111827',
