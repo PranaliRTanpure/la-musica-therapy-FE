@@ -83,6 +83,8 @@ export interface DataTablePaginationProps {
   onPageChange?: (page: number) => void;
   /** Fired on rows-per-page change (controlled mode only). */
   onRowsPerPageChange?: (rowsPerPage: number) => void;
+  /** Fired when the user submits "Go to page". Defaults to `onPageChange`. */
+  onGoToPage?: (page: number) => void;
 }
 
 /**
@@ -461,6 +463,7 @@ export function DataTable<T>({
           toRow={Math.min(currentPage * currentRowsPerPage, totalRowCount)}
           onPageChange={handlePageChange}
           onRowsPerPageChange={handleRowsPerPageChange}
+          onGoToPage={pagination.onGoToPage ?? handlePageChange}
         />
       )}
     </Paper>

@@ -5,7 +5,10 @@ import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { DataTable } from '@/components/common/DataTable';
-import type { DataTableColumn } from '@/components/common/DataTable';
+import type {
+  DataTableColumn,
+  DataTablePaginationProps,
+} from '@/components/common/DataTable';
 import { StatusChip } from '@/components/common/StatusChip';
 import { NameLink } from '@/components/common/NameLink';
 import { RowActionsMenu } from '@/components/common/RowActionsMenu';
@@ -45,9 +48,14 @@ const columns: DataTableColumn<ProspectRow>[] = [
 interface ProspectsTabProps {
   /** Rows to display; defaults to all prospects. Parent passes the paged slice. */
   rows?: ProspectRow[];
+  /** Forwarded to DataTable so pagination renders inside the table card. */
+  pagination?: DataTablePaginationProps;
 }
 
-export function ProspectsTab({ rows = PROSPECTS }: ProspectsTabProps) {
+export function ProspectsTab({
+  rows = PROSPECTS,
+  pagination,
+}: ProspectsTabProps) {
   const navigate = useNavigate();
   const [trialProspect, setTrialProspect] = useState<ProspectRow | null>(null);
   const [scheduledToastOpen, setScheduledToastOpen] = useState(false);
@@ -59,6 +67,7 @@ export function ProspectsTab({ rows = PROSPECTS }: ProspectsTabProps) {
         columns={columns}
         rows={rows}
         getRowId={(r) => r.id}
+        pagination={pagination}
         renderRowActions={(row) => (
           <RowActionsMenu
             label={row.name}

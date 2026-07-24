@@ -1,5 +1,8 @@
 import { DataTable } from '@/components/common/DataTable';
-import type { DataTableColumn } from '@/components/common/DataTable';
+import type {
+  DataTableColumn,
+  DataTablePaginationProps,
+} from '@/components/common/DataTable';
 import { StatusChip } from '@/components/common/StatusChip';
 import { NameLink } from '@/components/common/NameLink';
 import { CLIENTS } from '../data';
@@ -46,15 +49,18 @@ const columns: DataTableColumn<ClientRow>[] = [
 interface ClientsTabProps {
   /** Rows to display; defaults to all clients. Parent passes the paged slice. */
   rows?: ClientRow[];
+  /** Forwarded to DataTable so pagination renders inside the table card. */
+  pagination?: DataTablePaginationProps;
 }
 
-export function ClientsTab({ rows = CLIENTS }: ClientsTabProps) {
+export function ClientsTab({ rows = CLIENTS, pagination }: ClientsTabProps) {
   return (
     <DataTable
       ariaLabel="Clients"
       columns={columns}
       rows={rows}
       getRowId={(r) => r.id}
+      pagination={pagination}
     />
   );
 }

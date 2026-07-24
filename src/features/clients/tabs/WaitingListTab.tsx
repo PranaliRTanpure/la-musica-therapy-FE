@@ -1,5 +1,8 @@
 import { DataTable } from '@/components/common/DataTable';
-import type { DataTableColumn } from '@/components/common/DataTable';
+import type {
+  DataTableColumn,
+  DataTablePaginationProps,
+} from '@/components/common/DataTable';
 import { StatusChip } from '@/components/common/StatusChip';
 import { NameLink } from '@/components/common/NameLink';
 import { WAITING_LIST } from '../data';
@@ -37,15 +40,21 @@ const columns: DataTableColumn<WaitingListRow>[] = [
 interface WaitingListTabProps {
   /** Rows to display; defaults to the full waiting list. Parent passes the paged slice. */
   rows?: WaitingListRow[];
+  /** Forwarded to DataTable so pagination renders inside the table card. */
+  pagination?: DataTablePaginationProps;
 }
 
-export function WaitingListTab({ rows = WAITING_LIST }: WaitingListTabProps) {
+export function WaitingListTab({
+  rows = WAITING_LIST,
+  pagination,
+}: WaitingListTabProps) {
   return (
     <DataTable
       ariaLabel="Waiting List"
       columns={columns}
       rows={rows}
       getRowId={(r) => r.id}
+      pagination={pagination}
     />
   );
 }

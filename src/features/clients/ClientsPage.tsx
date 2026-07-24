@@ -10,7 +10,7 @@ import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import { AppButton } from '@/components/common/AppButton';
 import { AppTextField } from '@/components/common/AppTextField';
 import { AppTabs } from '@/components/common/AppTabs';
-import { TablePaginationBar } from '@/components/common/TablePaginationBar';
+import type { DataTablePaginationProps } from '@/components/common/DataTable';
 import { FilterMenu } from '@/components/common/FilterMenu';
 import type {
   FilterGroup,
@@ -41,7 +41,8 @@ interface TabConfig {
   render: (
     page: number,
     rowsPerPage: number,
-    filters: FilterSelection
+    filters: FilterSelection,
+    pagination: DataTablePaginationProps
   ) => ReactNode;
   action?: ReactNode;
   /** Filter groups shown in the toolbar filter popover for this tab. */
@@ -70,8 +71,11 @@ const TAB_CONFIG: TabConfig[] = [
     id: 'leads',
     label: 'Leads',
     getTotal: (filters) => filterLeads(filters).length,
-    render: (page, rowsPerPage, filters) => (
-      <LeadsTab rows={slice(filterLeads(filters), page, rowsPerPage)} />
+    render: (page, rowsPerPage, filters, pagination) => (
+      <LeadsTab
+        rows={slice(filterLeads(filters), page, rowsPerPage)}
+        pagination={pagination}
+      />
     ),
     filterGroups: LEADS_FILTERS,
     action: (
@@ -80,7 +84,11 @@ const TAB_CONFIG: TabConfig[] = [
         to={ROUTES.LEADS_NEW}
         variant="contained"
         startIcon={<AddIcon />}
-        sx={{ whiteSpace: 'nowrap' }}
+        sx={(theme) => ({
+          whiteSpace: 'nowrap',
+          fontSize: theme.typography.actionSmall.fontSize,
+          fontWeight: theme.typography.actionSmall.fontWeight,
+        })}
       >
         Add Leads
       </AppButton>
@@ -90,24 +98,33 @@ const TAB_CONFIG: TabConfig[] = [
     id: 'prospects',
     label: 'Prospects',
     getTotal: () => PROSPECTS.length,
-    render: (page, rowsPerPage) => (
-      <ProspectsTab rows={slice(PROSPECTS, page, rowsPerPage)} />
+    render: (page, rowsPerPage, _filters, pagination) => (
+      <ProspectsTab
+        rows={slice(PROSPECTS, page, rowsPerPage)}
+        pagination={pagination}
+      />
     ),
   },
   {
     id: 'waitingList',
     label: 'Waiting List',
     getTotal: () => WAITING_LIST.length,
-    render: (page, rowsPerPage) => (
-      <WaitingListTab rows={slice(WAITING_LIST, page, rowsPerPage)} />
+    render: (page, rowsPerPage, _filters, pagination) => (
+      <WaitingListTab
+        rows={slice(WAITING_LIST, page, rowsPerPage)}
+        pagination={pagination}
+      />
     ),
   },
   {
     id: 'clients',
     label: 'Clients',
     getTotal: () => CLIENTS.length,
-    render: (page, rowsPerPage) => (
-      <ClientsTab rows={slice(CLIENTS, page, rowsPerPage)} />
+    render: (page, rowsPerPage, _filters, pagination) => (
+      <ClientsTab
+        rows={slice(CLIENTS, page, rowsPerPage)}
+        pagination={pagination}
+      />
     ),
   },
 ];
@@ -147,6 +164,16 @@ export function ClientsPage() {
     setPage(1);
   };
 
+  const pagination: DataTablePaginationProps = {
+    total,
+    page: currentPage,
+    pageCount,
+    rowsPerPage,
+    onPageChange: handlePageChange,
+    onRowsPerPageChange: handleRowsPerPageChange,
+    onGoToPage: handlePageChange,
+  };
+
   return (
     <Box sx={{ p: { xs: 2, md: 2 } }}>
       {/* Tabs + toolbar */}
@@ -182,7 +209,7 @@ export function ClientsPage() {
                 aria-label="Filter"
                 disabled={!hasFilters}
                 onClick={(e) => setFilterAnchor(e.currentTarget)}
-                sx={{ border: 1, borderColor: 'divider' }}
+                sx={{ border: 1, borderColor: 'divider', borderRadius: 1 }}
               >
                 <FilterAltOutlinedIcon fontSize="small" />
               </IconButton>
@@ -192,19 +219,8 @@ export function ClientsPage() {
         </Stack>
       </Stack>
 
-      {/* Active tab's table */}
-      {active.render(currentPage, rowsPerPage, filters)}
-
-      {/* Shared pagination footer */}
-      <TablePaginationBar
-        total={total}
-        page={currentPage}
-        pageCount={pageCount}
-        rowsPerPage={rowsPerPage}
-        onPageChange={handlePageChange}
-        onRowsPerPageChange={handleRowsPerPageChange}
-        onGoToPage={handlePageChange}
-      />
+      {/* Active tab's table (pagination renders inside its DataTable card) */}
+      {active.render(currentPage, rowsPerPage, filters, pagination)}
 
       {/* Toolbar filter popover (Source filter for the Leads list) */}
       <FilterMenu

@@ -8,7 +8,10 @@ import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
 import { DataTable } from '@/components/common/DataTable';
-import type { DataTableColumn } from '@/components/common/DataTable';
+import type {
+  DataTableColumn,
+  DataTablePaginationProps,
+} from '@/components/common/DataTable';
 import { StatusChip } from '@/components/common/StatusChip';
 import { NameLink } from '@/components/common/NameLink';
 import { RowActionsMenu } from '@/components/common/RowActionsMenu';
@@ -56,9 +59,11 @@ const columns: DataTableColumn<LeadRow>[] = [
 interface LeadsTabProps {
   /** Rows to display; defaults to all leads. Parent passes filtered rows. */
   rows?: LeadRow[];
+  /** Forwarded to DataTable so pagination renders inside the table card. */
+  pagination?: DataTablePaginationProps;
 }
 
-export function LeadsTab({ rows = LEADS }: LeadsTabProps) {
+export function LeadsTab({ rows = LEADS, pagination }: LeadsTabProps) {
   const navigate = useNavigate();
   const [resendToastOpen, setResendToastOpen] = useState(false);
 
@@ -69,6 +74,7 @@ export function LeadsTab({ rows = LEADS }: LeadsTabProps) {
         columns={columns}
         rows={rows}
         getRowId={(r) => r.id}
+        pagination={pagination}
         renderRowActions={(row) => (
           <RowActionsMenu
             label={row.name}

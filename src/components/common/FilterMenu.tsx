@@ -99,7 +99,7 @@ export function FilterMenu({
             <Typography
               variant="overline"
               color="text.secondary"
-              sx={{ display: 'block', fontWeight: 600, mb: 0.5 }}
+              sx={{ display: 'block', fontWeight: 600, mb: 0 }}
             >
               {group.label}
             </Typography>
@@ -107,6 +107,7 @@ export function FilterMenu({
               {group.options.map((option) => (
                 <FormControlLabel
                   key={option.value}
+                  sx={{ ml: -1, minHeight: 0 }}
                   control={
                     <Checkbox
                       size="small"
@@ -115,6 +116,7 @@ export function FilterMenu({
                         option.value
                       )}
                       onChange={() => toggle(group.key, option.value)}
+                      sx={{ p: 0.5 }}
                     />
                   }
                   label={option.label}
@@ -137,11 +139,22 @@ export function FilterMenu({
         <Button
           variant="text"
           onClick={handleClear}
-          sx={{ color: 'text.secondary' }}
+          sx={(theme) => ({
+            color: 'text.secondary',
+            fontSize: theme.typography.actionSmall.fontSize,
+            fontWeight: theme.typography.actionSmall.fontWeight,
+          })}
         >
           Clear
         </Button>
-        <Button variant="contained" onClick={handleApply}>
+        <Button
+          variant="contained"
+          onClick={handleApply}
+          sx={(theme) => ({
+            fontSize: theme.typography.actionSmall.fontSize,
+            fontWeight: theme.typography.actionSmall.fontWeight,
+          })}
+        >
           Done
         </Button>
       </Stack>

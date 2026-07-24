@@ -7,6 +7,7 @@ import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import { paginationFontSize } from '@/theme/theme';
 
 export interface TablePaginationBarProps {
   /** Rows shown per page (static for now). */
@@ -73,30 +74,52 @@ export function TablePaginationBar({
       {/* Left: rows per page + range */}
       <Stack direction="row" alignItems="center" spacing={2}>
         <Stack direction="row" alignItems="center" spacing={1}>
-          <Typography variant="body2" color="text.secondary">
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ fontSize: paginationFontSize, fontWeight: 400 }}
+          >
             Rows per page:
           </Typography>
           <Select
             value={rowsPerPage}
             onChange={(e) => onRowsPerPageChange?.(Number(e.target.value))}
             size="small"
-            sx={{ '& .MuiSelect-select': { py: 0.5 } }}
+            sx={{
+              '& .MuiSelect-select': {
+                py: 0.5,
+                fontSize: paginationFontSize,
+                fontWeight: 400,
+              },
+            }}
           >
             {rowsPerPageOptions.map((opt) => (
-              <MenuItem key={opt} value={opt}>
+              <MenuItem
+                key={opt}
+                value={opt}
+                sx={{ fontSize: paginationFontSize }}
+              >
                 {opt}
               </MenuItem>
             ))}
           </Select>
         </Stack>
-        <Typography variant="body2" color="text.secondary">
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ fontSize: paginationFontSize }}
+        >
           {fromRow}-{toRow} of {total}
         </Typography>
       </Stack>
 
       {/* Center: go to page */}
       <Stack direction="row" alignItems="center" spacing={1}>
-        <Typography variant="body2" color="text.secondary">
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ fontSize: paginationFontSize }}
+        >
           Go to page
         </Typography>
         <TextField
@@ -110,14 +133,33 @@ export function TablePaginationBar({
           sx={(theme) => ({
             width: theme.spacing(8),
             '& .MuiInputBase-input': {
-              fontSize: theme.typography.body1.fontSize,
               py: 0.5,
               textAlign: 'center',
+              // Font-size stays at the theme default (16px) so iOS Safari
+              // never sees a sub-16px input and auto-zooms the viewport on
+              // focus. The smaller visual size to match the rest of the
+              // pagination bar is achieved with a scale transform instead,
+              // which doesn't affect the effective font-size iOS reads.
+              // `paginationFontSize` is a rem value (e.g. "0.75rem"); since
+              // 1rem is the base font-size, its numeric value IS the scale
+              // factor relative to the input's 16px/1rem font-size.
+              transform: `scale(${Number.parseFloat(paginationFontSize)})`,
+              transformOrigin: 'center',
             },
           })}
           slotProps={{ htmlInput: { 'aria-label': 'Go to page' } }}
         />
-        <Button variant="outlined" size="small" onClick={submitGoTo}>
+        <Button
+          variant="outlined"
+          size="small"
+          onClick={submitGoTo}
+          sx={{
+            color: 'text.secondary',
+            borderColor: 'divider',
+            fontSize: paginationFontSize,
+            fontWeight: 400,
+          }}
+        >
           Go
         </Button>
       </Stack>
@@ -136,6 +178,25 @@ export function TablePaginationBar({
           color="primary"
           shape="rounded"
           siblingCount={1}
+          sx={{
+            '& .MuiPaginationItem-root': {
+              position: 'relative',
+              fontSize: paginationFontSize,
+              // Visual box stays a compact 22x22px pill, matching the design.
+              width: 22,
+              height: 22,
+              minWidth: 22,
+              padding: 0,
+              // An invisible pseudo-element expands the tappable area to the
+              // 44x44px Apple HIG minimum without inflating the visible pill,
+              // so page numbers stay reliably tappable on touch devices.
+              '&::after': {
+                content: '""',
+                position: 'absolute',
+                inset: -11,
+              },
+            },
+          }}
         />
       </Box>
     </Stack>
