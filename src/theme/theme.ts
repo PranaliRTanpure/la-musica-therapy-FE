@@ -21,11 +21,15 @@ declare module '@mui/material/styles' {
     placeholder: {
       main: string;
     };
+    stickyShadow: {
+      color: string;
+    };
   }
   interface PaletteOptions {
     nav?: Palette['nav'];
     border?: Palette['border'];
     placeholder?: Palette['placeholder'];
+    stickyShadow?: Palette['stickyShadow'];
   }
 }
 
@@ -46,6 +50,7 @@ declare module '@mui/material/styles/createTypography' {
     authPageSubtitle: React.CSSProperties;
     captchaChar: React.CSSProperties;
     otpDigit: React.CSSProperties;
+    actionSmall: React.CSSProperties;
   }
   interface TypographyVariantsOptions {
     authPageTitle?: React.CSSProperties;
@@ -53,12 +58,14 @@ declare module '@mui/material/styles/createTypography' {
     authPageSubtitle?: React.CSSProperties;
     captchaChar?: React.CSSProperties;
     otpDigit?: React.CSSProperties;
+    actionSmall?: React.CSSProperties;
   }
   // `theme.typography.otpDigit` (direct property access, not the `variant`
   // prop) is typed via `Typography`, a distinct interface from
   // `TypographyVariants` above — both must be augmented.
   interface Typography {
     otpDigit: React.CSSProperties;
+    actionSmall: React.CSSProperties;
   }
 }
 
@@ -69,6 +76,7 @@ declare module '@mui/material/Typography' {
     authPageSubtitle: true;
     captchaChar: true;
     otpDigit: true;
+    actionSmall: true;
   }
 }
 
@@ -119,6 +127,9 @@ const palette = {
   placeholder: {
     main: '#A1A1A6', // input placeholder text color
   },
+  stickyShadow: {
+    color: 'rgba(0, 0, 0, 0.15)', // shadow cast by sticky/pinned table columns
+  },
   text: {
     primary: '#111827',
     secondary: '#6B7280',
@@ -162,6 +173,9 @@ const typography = {
   authPageSubtitle: { fontSize: '0.875rem', fontWeight: 400, lineHeight: 1.5 },
   captchaChar: { fontSize: '1.375rem', fontWeight: 700, lineHeight: 1.3 },
   otpDigit: { fontSize: '1.25rem', fontWeight: 600, lineHeight: 1.3 },
+  // Small action text: pill tabs, compact popover/toolbar buttons. Referenced
+  // via `theme.typography.actionSmall` instead of hardcoding 12/500.
+  actionSmall: { fontSize: '0.75rem', fontWeight: 500, lineHeight: 1.4 },
   button: { textTransform: 'none' as const, fontWeight: 600 }, // MUI uppercases by default; usually you don't want that
 };
 
@@ -174,6 +188,11 @@ const shape = {
 export const layout = {
   authFormMaxWidth: 420,
 };
+
+// Shared small-text size for TablePaginationBar's compact controls (labels,
+// select, menu items, Go button, page buttons). Single source of truth so the
+// footer's font size isn't repeated as a literal across the component.
+export const paginationFontSize = typography.actionSmall.fontSize;
 
 /**
  * --- 4. COMPONENT DEFAULT OVERRIDES ---
@@ -273,7 +292,7 @@ export const theme = createTheme({
         root: {
           borderColor: palette.divider,
           whiteSpace: 'nowrap',
-          fontSize: typography.body2.fontSize,
+          fontSize: '0.8125rem', // 13px
           // Tighter vertical padding than MUI's default so table rows are more
           // compact; horizontal padding stays at the default 16px so columns
           // keep breathing room. (Row height floors ~43px on the checkbox/
@@ -284,10 +303,11 @@ export const theme = createTheme({
         head: {
           backgroundColor: palette.background.default,
           color: palette.text.secondary,
-          fontWeight: 600,
+          fontWeight: 500,
         },
         body: {
           color: palette.text.primary,
+          fontWeight: 400,
         },
       },
     },

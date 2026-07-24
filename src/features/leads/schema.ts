@@ -94,6 +94,7 @@ export const SOURCE_OPTIONS = opts(
   'Walk In',
   'Website'
 );
+export const STATUS_OPTIONS = opts('Invite Sent');
 export const MINOR_OPTIONS: AppSelectOption[] = [
   { label: 'No', value: 'no' },
   { label: 'Yes', value: 'yes' },

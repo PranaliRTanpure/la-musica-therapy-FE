@@ -66,7 +66,13 @@ export function FormSection({
           >
             {index}
           </Box>
-          <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+          <Typography
+            variant="subtitle1"
+            sx={(theme) => ({
+              fontWeight: 600,
+              fontSize: theme.typography.pxToRem(14),
+            })}
+          >
             {title}
           </Typography>
         </Stack>

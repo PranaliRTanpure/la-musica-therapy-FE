@@ -6,11 +6,12 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { AppButton } from '@/components/common/AppButton';
 import { DataTable } from '@/components/common/DataTable';
 import type { DataTableColumn } from '@/components/common/DataTable';
+import { RowActionsMenu } from '@/components/common/RowActionsMenu';
 import { formatShortDate } from '@/utils/date';
-import { HolidayActions } from './components/HolidayActions';
 import { HolidayFormDialog } from './components/HolidayFormDialog';
 import { HOLIDAYS } from './data';
 import type { HolidayRow } from './types';
@@ -108,9 +109,16 @@ export function HolidaysPage() {
         getRowId={(row) => row.id}
         selectable={false}
         renderRowActions={(row) => (
-          <HolidayActions
-            holidayTitle={row.title}
-            onEdit={() => openEdit(row)}
+          <RowActionsMenu
+            label={row.title}
+            actions={[
+              {
+                key: 'edit',
+                label: 'Edit',
+                icon: <EditOutlinedIcon fontSize="small" />,
+                onClick: () => openEdit(row),
+              },
+            ]}
           />
         )}
       />

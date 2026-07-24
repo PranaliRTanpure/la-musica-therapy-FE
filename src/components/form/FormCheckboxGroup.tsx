@@ -14,6 +14,7 @@ export interface FormCheckboxGroupProps<T extends FieldValues> {
   options: CheckboxGroupOption[];
   /** MUI Grid2 `size` for each option cell. */
   itemSize?: { xs?: number; sm?: number; md?: number };
+  disabled?: boolean;
 }
 
 /**
@@ -26,6 +27,7 @@ export function FormCheckboxGroup<T extends FieldValues>({
   control,
   options,
   itemSize = { xs: 12, sm: 6, md: 3 },
+  disabled,
 }: FormCheckboxGroupProps<T>) {
   return (
     <Controller
@@ -49,6 +51,7 @@ export function FormCheckboxGroup<T extends FieldValues>({
                   label={option.label}
                   checked={selected.includes(option.value)}
                   onChange={() => toggle(option.value)}
+                  disabled={disabled}
                 />
               </Grid>
             ))}

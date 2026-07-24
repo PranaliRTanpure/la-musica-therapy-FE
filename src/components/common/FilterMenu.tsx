@@ -87,20 +87,19 @@ export function FilterMenu({
         paper: {
           sx: {
             mt: 1,
-            p: 2,
             minWidth: (theme) => theme.spacing(28),
             boxShadow: 3,
           },
         },
       }}
     >
-      <Stack spacing={2}>
+      <Stack divider={<Divider sx={{ borderColor: 'divider' }} />}>
         {groups.map((group) => (
-          <Box key={group.key}>
+          <Box key={group.key} sx={{ px: 2, py: 1.5 }}>
             <Typography
               variant="overline"
               color="text.secondary"
-              sx={{ display: 'block', fontWeight: 600, mb: 0.5 }}
+              sx={{ display: 'block', fontWeight: 600, mb: 0 }}
             >
               {group.label}
             </Typography>
@@ -108,6 +107,7 @@ export function FilterMenu({
               {group.options.map((option) => (
                 <FormControlLabel
                   key={option.value}
+                  sx={{ ml: -1, minHeight: 0 }}
                   control={
                     <Checkbox
                       size="small"
@@ -116,6 +116,7 @@ export function FilterMenu({
                         option.value
                       )}
                       onChange={() => toggle(group.key, option.value)}
+                      sx={{ p: 0.5 }}
                     />
                   }
                   label={option.label}
@@ -127,17 +128,33 @@ export function FilterMenu({
         ))}
       </Stack>
 
-      <Divider sx={{ my: 1.5 }} />
+      <Divider sx={{ borderColor: 'divider' }} />
 
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        sx={{ px: 2, py: 1.5 }}
+      >
         <Button
           variant="text"
           onClick={handleClear}
-          sx={{ color: 'text.secondary' }}
+          sx={(theme) => ({
+            color: 'text.secondary',
+            fontSize: theme.typography.actionSmall.fontSize,
+            fontWeight: theme.typography.actionSmall.fontWeight,
+          })}
         >
           Clear
         </Button>
-        <Button variant="contained" onClick={handleApply}>
+        <Button
+          variant="contained"
+          onClick={handleApply}
+          sx={(theme) => ({
+            fontSize: theme.typography.actionSmall.fontSize,
+            fontWeight: theme.typography.actionSmall.fontWeight,
+          })}
+        >
           Done
         </Button>
       </Stack>

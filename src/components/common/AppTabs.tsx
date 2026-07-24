@@ -74,8 +74,8 @@ export function AppTabs({
               py: 1,
 
               borderRadius: 0.75,
-              fontSize: theme.typography.body2.fontSize,
-              fontWeight: 500,
+              fontSize: theme.typography.actionSmall.fontSize,
+              fontWeight: theme.typography.actionSmall.fontWeight,
               color: 'text.secondary',
               '&.Mui-selected': {
                 color: 'primary.main',
