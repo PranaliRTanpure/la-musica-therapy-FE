@@ -1,5 +1,8 @@
 import { DataTable } from '@/components/common/DataTable';
-import type { DataTableColumn } from '@/components/common/DataTable';
+import type {
+  DataTableColumn,
+  DataTablePaginationProps,
+} from '@/components/common/DataTable';
 import { StatusChip } from '@/components/common/StatusChip';
 import { NameLink } from '@/components/common/NameLink';
 import { CLIENTS } from '../data';
@@ -10,6 +13,8 @@ const columns: DataTableColumn<ClientRow>[] = [
   {
     id: 'name',
     label: 'Client Name',
+    sticky: 'left',
+    width: 200,
     render: (r) => <NameLink to={patientChartPath(r.id)}>{r.name}</NameLink>,
   },
   { id: 'phone', label: 'Phone Number', render: (r) => r.phone },
@@ -41,13 +46,21 @@ const columns: DataTableColumn<ClientRow>[] = [
   },
 ];
 
-export function ClientsTab() {
+interface ClientsTabProps {
+  /** Rows to display; defaults to all clients. Parent passes the paged slice. */
+  rows?: ClientRow[];
+  /** Forwarded to DataTable so pagination renders inside the table card. */
+  pagination?: DataTablePaginationProps;
+}
+
+export function ClientsTab({ rows = CLIENTS, pagination }: ClientsTabProps) {
   return (
     <DataTable
       ariaLabel="Clients"
       columns={columns}
-      rows={CLIENTS}
+      rows={rows}
       getRowId={(r) => r.id}
+      pagination={pagination}
     />
   );
 }

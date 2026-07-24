@@ -31,8 +31,10 @@ import {
 export interface AddLeadFormProps {
   /** Links an external submit button (`<button form={formId} type="submit">`). */
   formId?: string;
-  /** When true, show only the mandatory first section and its required fields. */
+  /** When true, hide Section 1's optional fields — required fields only. */
   mandatoryOnly?: boolean;
+  /** When true, all fields are disabled and every section is forced open (View mode). */
+  readOnly?: boolean;
   /** Called with validated values on submit. */
   onSubmit?: (values: AddLeadFormValues) => void;
 }
@@ -48,6 +50,7 @@ const HALF = { xs: 12, md: 6 } as const;
 export function AddLeadForm({
   formId = 'add-lead-form',
   mandatoryOnly = false,
+  readOnly = false,
   onSubmit,
 }: AddLeadFormProps) {
   const { control, handleSubmit } = useForm<AddLeadFormValues>({
@@ -56,7 +59,8 @@ export function AddLeadForm({
     mode: 'onTouched',
   });
 
-  // Section 1 is always open; the rest default closed and toggle independently.
+  // Section 1 is always open; the rest default closed and toggle independently,
+  // in both edit and read-only (View) mode — only the fields are disabled in View.
   const [openSections, setOpenSections] = useState<Record<number, boolean>>({
     1: true,
     2: false,
@@ -77,9 +81,9 @@ export function AddLeadForm({
       <FormSection
         index={1}
         title="Lead (Patient) Details"
-        expanded={mandatoryOnly || openSections[1]}
+        expanded={mandatoryOnly || readOnly || openSections[1]}
         onToggle={setOpen(1)}
-        locked={mandatoryOnly}
+        locked={mandatoryOnly || readOnly}
       >
         <Grid container spacing={2}>
           <Grid size={HALF}>
@@ -89,6 +93,7 @@ export function AddLeadForm({
               label="First Name"
               required
               placeholder="First name"
+              disabled={readOnly}
             />
           </Grid>
           <Grid size={HALF}>
@@ -98,6 +103,7 @@ export function AddLeadForm({
               label="Last Name"
               required
               placeholder="Last name"
+              disabled={readOnly}
             />
           </Grid>
           <Grid size={HALF}>
@@ -107,6 +113,7 @@ export function AddLeadForm({
               label="Mobile No"
               required
               placeholder="Enter number"
+              disabled={readOnly}
             />
           </Grid>
           <Grid size={HALF}>
@@ -116,6 +123,7 @@ export function AddLeadForm({
               label="Email"
               required
               placeholder="name@email.com"
+              disabled={readOnly}
             />
           </Grid>
           <Grid size={HALF}>
@@ -126,6 +134,7 @@ export function AddLeadForm({
               required
               placeholder="Select language"
               options={LANGUAGE_OPTIONS}
+              disabled={readOnly}
             />
           </Grid>
           <Grid size={HALF}>
@@ -136,10 +145,11 @@ export function AddLeadForm({
               required
               placeholder="Select source"
               options={SOURCE_OPTIONS}
+              disabled={readOnly}
             />
           </Grid>
 
-          {!mandatoryOnly && (
+          {(!mandatoryOnly || readOnly) && (
             <>
               <Grid size={HALF}>
                 <FormTextField
@@ -147,6 +157,7 @@ export function AddLeadForm({
                   name="dateOfBirth"
                   label="Date of Birth"
                   placeholder="MM/DD/YYYY"
+                  disabled={readOnly}
                   slotProps={{
                     input: {
                       endAdornment: (
@@ -165,6 +176,7 @@ export function AddLeadForm({
                   label="Is this lead a minor?"
                   placeholder="No"
                   options={MINOR_OPTIONS}
+                  disabled={readOnly}
                 />
               </Grid>
               <Grid size={12}>
@@ -173,6 +185,7 @@ export function AddLeadForm({
                   name="homeAddress"
                   label="Home Address"
                   placeholder="Street address"
+                  disabled={readOnly}
                 />
               </Grid>
               <Grid size={{ xs: 12, md: 6 }}>
@@ -181,6 +194,7 @@ export function AddLeadForm({
                   name="city"
                   label="City"
                   placeholder="City"
+                  disabled={readOnly}
                 />
               </Grid>
               <Grid size={{ xs: 6, md: 3 }}>
@@ -189,6 +203,7 @@ export function AddLeadForm({
                   name="state"
                   label="State"
                   placeholder="State"
+                  disabled={readOnly}
                 />
               </Grid>
               <Grid size={{ xs: 6, md: 3 }}>
@@ -197,6 +212,7 @@ export function AddLeadForm({
                   name="zip"
                   label="Zip"
                   placeholder="Zip"
+                  disabled={readOnly}
                 />
               </Grid>
               <Grid size={HALF}>
@@ -206,6 +222,7 @@ export function AddLeadForm({
                   label="Preferred Contact Method"
                   placeholder="Select method"
                   options={CONTACT_METHOD_OPTIONS}
+                  disabled={readOnly}
                 />
               </Grid>
               <Grid size={HALF}>
@@ -214,6 +231,7 @@ export function AddLeadForm({
                   name="diagnosis"
                   label="Diagnosis (parent-provided)"
                   placeholder="e.g. Autism Spectrum Disorder"
+                  disabled={readOnly}
                 />
               </Grid>
             </>
@@ -221,143 +239,151 @@ export function AddLeadForm({
         </Grid>
       </FormSection>
 
-      {!mandatoryOnly && (
-        <>
-          {/* 2. Funding & Authorization */}
-          <FormSection
-            index={2}
-            title="Funding & Authorization"
-            expanded={openSections[2]}
-            onToggle={setOpen(2)}
-          >
-            <Grid container spacing={2}>
-              <Grid size={HALF}>
-                <FormSelect
-                  control={control}
-                  name="fundingType"
-                  label="Funding / Payer Type"
-                  placeholder="Select funding"
-                  options={FUNDING_OPTIONS}
-                />
-              </Grid>
-              <Grid size={HALF}>
-                <FormSelect
-                  control={control}
-                  name="regionalCenter"
-                  label="Regional Center"
-                  placeholder="Select center"
-                  options={REGIONAL_CENTER_OPTIONS}
-                />
-              </Grid>
-              <Grid size={HALF}>
-                <FormTextField
-                  control={control}
-                  name="uciNumber"
-                  label="UCI Number"
-                  placeholder="From auth"
-                />
-              </Grid>
-              <Grid size={HALF}>
-                <FormTextField
-                  control={control}
-                  name="serviceCoordinator"
-                  label="Service Coordinator"
-                  placeholder="Name"
-                />
-              </Grid>
-            </Grid>
-          </FormSection>
+      {/* 2. Funding & Authorization */}
+      <FormSection
+        index={2}
+        title="Funding & Authorization"
+        expanded={openSections[2]}
+        onToggle={setOpen(2)}
+      >
+        <Grid container spacing={2}>
+          <Grid size={HALF}>
+            <FormSelect
+              control={control}
+              name="fundingType"
+              label="Funding / Payer Type"
+              placeholder="Select funding"
+              options={FUNDING_OPTIONS}
+              disabled={readOnly}
+            />
+          </Grid>
+          <Grid size={HALF}>
+            <FormSelect
+              control={control}
+              name="regionalCenter"
+              label="Regional Center"
+              placeholder="Select center"
+              options={REGIONAL_CENTER_OPTIONS}
+              disabled={readOnly}
+            />
+          </Grid>
+          <Grid size={HALF}>
+            <FormTextField
+              control={control}
+              name="uciNumber"
+              label="UCI Number"
+              placeholder="From auth"
+              disabled={readOnly}
+            />
+          </Grid>
+          <Grid size={HALF}>
+            <FormTextField
+              control={control}
+              name="serviceCoordinator"
+              label="Service Coordinator"
+              placeholder="Name"
+              disabled={readOnly}
+            />
+          </Grid>
+        </Grid>
+      </FormSection>
 
-          {/* 3. Consents & Policies */}
-          <FormSection
-            index={3}
-            title="Consents & Policies"
-            expanded={openSections[3]}
-            onToggle={setOpen(3)}
-          >
-            <Stack>
-              <FormCheckbox
-                control={control}
-                name="hipaaConsent"
-                label="HIPAA / Privacy Notice — consent to collect & store protected health information"
-              />
-              <FormCheckbox
-                control={control}
-                name="contactConsent"
-                label="Consent to contact — agree to receive calls and SMS reminders"
-              />
-              <FormCheckbox
-                control={control}
-                name="paymentPolicy"
-                label="Payment & Cancellation Policy"
-              />
-            </Stack>
-          </FormSection>
+      {/* 3. Consents & Policies */}
+      <FormSection
+        index={3}
+        title="Consents & Policies"
+        expanded={openSections[3]}
+        onToggle={setOpen(3)}
+      >
+        <Stack>
+          <FormCheckbox
+            control={control}
+            name="hipaaConsent"
+            label="HIPAA / Privacy Notice — consent to collect & store protected health information"
+            disabled={readOnly}
+          />
+          <FormCheckbox
+            control={control}
+            name="contactConsent"
+            label="Consent to contact — agree to receive calls and SMS reminders"
+            disabled={readOnly}
+          />
+          <FormCheckbox
+            control={control}
+            name="paymentPolicy"
+            label="Payment & Cancellation Policy"
+            disabled={readOnly}
+          />
+        </Stack>
+      </FormSection>
 
-          {/* 4. Service & Scheduling Setup */}
-          <FormSection
-            index={4}
-            title="Service & Scheduling Setup"
-            expanded={openSections[4]}
-            onToggle={setOpen(4)}
-          >
-            <Grid container spacing={2}>
-              <Grid size={HALF}>
-                <FormSelect
-                  control={control}
-                  name="assignedFacility"
-                  label="Assigned Facility"
-                  placeholder="Select facility"
-                  options={FACILITY_OPTIONS}
-                />
-              </Grid>
-              <Grid size={HALF}>
-                <FormSelect
-                  control={control}
-                  name="assignedTherapist"
-                  label="Assigned Therapist"
-                  placeholder="Select therapist"
-                  options={THERAPIST_OPTIONS}
-                />
-              </Grid>
-              <Grid size={HALF}>
-                <FormSelect
-                  control={control}
-                  name="defaultSessionDuration"
-                  label="Default Session Duration"
-                  placeholder="Select duration"
-                  options={SESSION_DURATION_OPTIONS}
-                />
-              </Grid>
-              <Grid size={HALF}>
-                <FormTextField
-                  control={control}
-                  name="icdCodes"
-                  label="Diagnosis / ICD-10 Code(s)"
-                  placeholder="e.g. F84.0"
-                />
-              </Grid>
+      {/* 4. Service & Scheduling Setup */}
+      <FormSection
+        index={4}
+        title="Service & Scheduling Setup"
+        expanded={openSections[4]}
+        onToggle={setOpen(4)}
+      >
+        <Grid container spacing={2}>
+          <Grid size={HALF}>
+            <FormSelect
+              control={control}
+              name="assignedFacility"
+              label="Assigned Facility"
+              placeholder="Select facility"
+              options={FACILITY_OPTIONS}
+              disabled={readOnly}
+            />
+          </Grid>
+          <Grid size={HALF}>
+            <FormSelect
+              control={control}
+              name="assignedTherapist"
+              label="Assigned Therapist"
+              placeholder="Select therapist"
+              options={THERAPIST_OPTIONS}
+              disabled={readOnly}
+            />
+          </Grid>
+          <Grid size={HALF}>
+            <FormSelect
+              control={control}
+              name="defaultSessionDuration"
+              label="Default Session Duration"
+              placeholder="Select duration"
+              options={SESSION_DURATION_OPTIONS}
+              disabled={readOnly}
+            />
+          </Grid>
+          <Grid size={HALF}>
+            <FormTextField
+              control={control}
+              name="icdCodes"
+              label="Diagnosis / ICD-10 Code(s)"
+              placeholder="e.g. F84.0"
+              disabled={readOnly}
+            />
+          </Grid>
 
-              <Grid size={12}>
-                <Typography
-                  variant="body2"
-                  sx={(theme) => ({
-                    fontWeight: theme.typography.fontWeightSemiBold,
-                    mb: 1,
-                  })}
-                >
-                  Assigned Service Types
-                </Typography>
-                <FormCheckboxGroup
-                  control={control}
-                  name="serviceTypes"
-                  options={SERVICE_TYPE_OPTIONS}
-                />
-              </Grid>
-            </Grid>
-          </FormSection>
-        </>
-      )}
+          <Grid size={12}>
+            <Typography
+              variant="body2"
+              sx={(theme) => ({
+                fontWeight: theme.typography.fontWeightSemiBold,
+                mb: 1,
+              })}
+            >
+              Assigned Service Types
+            </Typography>
+            <FormCheckboxGroup
+              control={control}
+              name="serviceTypes"
+              options={SERVICE_TYPE_OPTIONS}
+              disabled={readOnly}
+            />
+          </Grid>
+        </Grid>
+      </FormSection>
     </Box>
   );
 }

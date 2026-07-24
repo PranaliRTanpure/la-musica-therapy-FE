@@ -19,7 +19,8 @@ export function NameLink({ children, to, onClick }: NameLinkProps) {
         underline="hover"
         color="primary"
         sx={(theme) => ({
-          fontWeight: theme.typography.fontWeightSemiBold,
+          fontSize: 'inherit',
+          fontWeight: theme.typography.actionSmall.fontWeight,
           textAlign: 'left',
         })}
       >
@@ -36,7 +37,8 @@ export function NameLink({ children, to, onClick }: NameLinkProps) {
       color="primary"
       onClick={onClick}
       sx={(theme) => ({
-        fontWeight: theme.typography.fontWeightSemiBold,
+        fontSize: 'inherit',
+        fontWeight: theme.typography.actionSmall.fontWeight,
         textAlign: 'left',
       })}
     >
