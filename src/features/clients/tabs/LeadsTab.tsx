@@ -4,11 +4,14 @@ import Avatar from '@mui/material/Avatar';
 import Snackbar from '@mui/material/Snackbar';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
 import { DataTable } from '@/components/common/DataTable';
 import type { DataTableColumn } from '@/components/common/DataTable';
 import { StatusChip } from '@/components/common/StatusChip';
 import { NameLink } from '@/components/common/NameLink';
-import { LeadActions } from './components/LeadActions';
+import { RowActionsMenu } from '@/components/common/RowActionsMenu';
 import { LEADS } from '../data';
 import type { LeadRow } from '../types';
 import { leadDetailPath } from '@/config/routes';
@@ -67,11 +70,28 @@ export function LeadsTab({ rows = LEADS }: LeadsTabProps) {
         rows={rows}
         getRowId={(r) => r.id}
         renderRowActions={(row) => (
-          <LeadActions
-            leadName={row.name}
-            onView={() => navigate(`${leadDetailPath(row.id)}?mode=view`)}
-            onEdit={() => navigate(leadDetailPath(row.id))}
-            onResendLink={() => setResendToastOpen(true)}
+          <RowActionsMenu
+            label={row.name}
+            actions={[
+              {
+                key: 'view',
+                label: 'View',
+                icon: <VisibilityOutlinedIcon fontSize="small" />,
+                onClick: () => navigate(`${leadDetailPath(row.id)}?mode=view`),
+              },
+              {
+                key: 'edit',
+                label: 'Edit',
+                icon: <EditOutlinedIcon fontSize="small" />,
+                onClick: () => navigate(leadDetailPath(row.id)),
+              },
+              {
+                key: 'resend-link',
+                label: 'Resend link',
+                icon: <SendOutlinedIcon fontSize="small" />,
+                onClick: () => setResendToastOpen(true),
+              },
+            ]}
           />
         )}
       />

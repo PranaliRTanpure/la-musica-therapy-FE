@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Snackbar from '@mui/material/Snackbar';
+import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { DataTable } from '@/components/common/DataTable';
 import type { DataTableColumn } from '@/components/common/DataTable';
 import { StatusChip } from '@/components/common/StatusChip';
 import { NameLink } from '@/components/common/NameLink';
-import { ProspectActions } from './components/ProspectActions';
+import { RowActionsMenu } from '@/components/common/RowActionsMenu';
 import { ScheduleTrialDialog } from './components/ScheduleTrialDialog';
 import { PROSPECTS } from '../data';
 import type { ProspectRow } from '../types';
@@ -57,11 +60,30 @@ export function ProspectsTab({ rows = PROSPECTS }: ProspectsTabProps) {
         rows={rows}
         getRowId={(r) => r.id}
         renderRowActions={(row) => (
-          <ProspectActions
-            prospectName={row.name}
-            onScheduleTrial={() => setTrialProspect(row)}
-            onView={() => navigate(`${patientChartPath(row.id)}?mode=view`)}
-            onEdit={() => navigate(patientChartPath(row.id))}
+          <RowActionsMenu
+            label={row.name}
+            actions={[
+              {
+                key: 'schedule-trial',
+                label: 'Schedule Trial',
+                icon: <CalendarTodayOutlinedIcon fontSize="small" />,
+                onClick: () => setTrialProspect(row),
+              },
+              {
+                key: 'view',
+                label: 'View',
+                icon: <VisibilityOutlinedIcon fontSize="small" />,
+                onClick: () =>
+                  navigate(`${patientChartPath(row.id)}?mode=view`),
+                dividerBefore: true,
+              },
+              {
+                key: 'edit',
+                label: 'Edit',
+                icon: <EditOutlinedIcon fontSize="small" />,
+                onClick: () => navigate(patientChartPath(row.id)),
+              },
+            ]}
           />
         )}
       />
